@@ -32,7 +32,23 @@ Game.refresh=function(){
 	//grr this is bad coding, this chunk of code is for the desesperatly try to sleep back ending at page 28
 	if(Game.tick>69){
 		Game.menus[28].buttons[1].menugoto=29;
-}
+	}
+	//this is terrible
+	
+	if(Game.page>0 && Game.page<5){
+		Game.div.style.backgroundImage="url('img/4 yikes burger.png')";
+	}
+	else if(Game.page>4 && Game.page<10){
+		Game.div.style.backgroundImage='url("img/bavid dowie.png")';
+	}
+	else if(Game.page>9 && Game.page<18){
+		Game.div.style.backgroundImage='url("img/drill.png")';
+	}
+	else if(Game.page>17 && Game.page<29){
+		Game.div.style.backgroundImage='url("img/bed.png")';
+	}
+	
+
 }
 
 Game.Menu=function(text,background){
@@ -74,6 +90,9 @@ Game.buttonclick=function(menuid,buttonid){
 			Game.refresh();
 		}
 }
+
+
+
 
 /*ALL MENUS AND BUTTONS ARE CODED HERE HEYYO
 
