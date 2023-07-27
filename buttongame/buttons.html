@@ -3,14 +3,49 @@
 <head></head>
 <body><div id="game"></div></body>
 <script>
+
+
+/* PEEPS, DISCOVER THE JOY OF SUCH A CLEAN AND SEXY CODE (you can notify me all aberration you find if you want, i am genuinely curious and willing to learn)
+
+Welcome to the machine:
+
+No need to remind you that this is a SPOILER ZONE, don't read it if you don't want to get spoiled
+
+To add:
+-obviously, more absurd stories and more endings
+-salt
+-passive aggressive comments if the game remember you didn't wash your hands
+-disgusting jokes
+-cookie clicker (i'm legit, that and other minigames hidden at some pages)
+-saving system
+-more jokes in source CODE
+
+To avoid:
+-becoming homestuck
+-death
+
+Update Log:
+(7/26/2023) V1: did the first version of the game in a few hours out of despair, with pretty drawings made with the mouse
+(7/27/2023) V2: continued the get out of bed "storyline" and added more succulent jokes (and pretty drawings made with the mouse
+
+https://usagik.tumblr.com 2023 (check out my tumblr!!)
+
+sorry if i'm bad, i'm french
+*/
 Game={};
 
 Game.page=0;
 Game.evil=0;
 Game.tick=0;
 Game.menus=[];
-Game.backgrounds=[]; //soon or never
+Game.backgrounds=["url('img/nope')","url('img/4 yikes burger.png')",'url("img/bavid dowie.png")','url("img/drill.png")','url("img/bed.png")','url("img/piss.png")','url("img/soap.png")']; //this is a very smart trick, because images aren't actually loaded and there's gonna be DELAY hehe 
 Game.div=document.getElementById("game");
+
+
+//these are for future funnies 
+Game.piss=0;
+Game.nowash=0;
+
 
 Game.refresh=function(){
 
@@ -21,7 +56,7 @@ Game.refresh=function(){
 	for (let i=0; i<Game.menus[Game.page].buttons.length; i++){
 	
 	//gah
-		butt=Game.menus[Game.page].buttons[i]
+		butt=Game.menus[Game.page].buttons[i] //haha see it's funny becaus it's butt
 		Game.div.innerHTML+="<p>";
 		button.innerHTML=butt.text;
 		button.setAttribute("onclick","Game.buttonclick("+Game.page+","+i+")");
@@ -29,12 +64,16 @@ Game.refresh=function(){
 	}
 	
 	
+	Game.div.style.backgroundImage=Game.backgrounds[Game.menus[Game.page].background]
+	
 	//grr this is bad coding, this chunk of code is for the desesperatly try to sleep back ending at page 28
-	if(Game.tick>69){
+	
+	
+	if(Game.tick>128){
 		Game.menus[28].buttons[1].menugoto=29;
 	}
 	//this is terrible
-	
+	/*
 	if(Game.page>0 && Game.page<5){
 		Game.div.style.backgroundImage="url('img/4 yikes burger.png')";
 	}
@@ -47,7 +86,7 @@ Game.refresh=function(){
 	else if(Game.page>17 && Game.page<29){
 		Game.div.style.backgroundImage='url("img/bed.png")';
 	}
-	
+	*/
 
 }
 
@@ -76,6 +115,23 @@ Game.buttonclick=function(menuid,buttonid){
 
 		thatbutton=Game.menus[menuid].buttons[buttonid];
 		
+		//42 1, aka no piss
+		//48 1, aka no washing your hands
+		 if (menuid==42 && buttonid==1){
+			Game.piss=1;
+		 }
+		 else if (menuid==48 && buttonid==1){
+			Game.nowash=1;
+		 }
+		 else if (menuid==42 && buttonid==0){
+			Game.piss=0;
+		 }
+		 else if (menuid==48 && buttonid==0){
+			Game.nowash=0;
+		 }
+		
+		
+		
 		if (thatbutton.minevil>0 && Game.evil>=thatbutton.minevil){
 			//evil routine >:(
 			Game.page=thatbutton.evilgoto;
@@ -89,6 +145,7 @@ Game.buttonclick=function(menuid,buttonid){
 			Game.evil+=thatbutton.addevil;
 			Game.refresh();
 		}
+		
 }
 
 
@@ -100,8 +157,8 @@ Game.buttonclick=function(menuid,buttonid){
 Page:
 0 - Start Button
 1 to 17 - The dream
-18 to 29 - The stay in bed end
-
+18 to 29 - The stay in bed ending
+30 to ??? - get out of bed route
 
 
 */
@@ -111,48 +168,48 @@ Game.menus.push(new Game.Menu("",0));
 Game.menus[0].addbutton("start",1,0,0,0);
 
 //the dream
-Game.menus.push(new Game.Menu("Lenny:\"Damn, I was sure burgers where purple, guess they're using green praypaint, probably to look ecofriendly.\"",0));
+Game.menus.push(new Game.Menu("Lenny:\"Damn, I was sure burgers where purple, guess they're using green praypaint, probably to look ecofriendly.\"",1)); //man you haven't heard about gay spraypaint (private joke)
 Game.menus[1].addbutton("Agree",2,0,0,0);
 //Game.menus[1].addbutton("\"I THINK WHAT IF WE JUST KISS RIGHT NOW",2,0,0,0);
 
-Game.menus.push(new Game.Menu("Lenny proceeds to eat the burger. Don't you wanna eat your burger too?",0));
+Game.menus.push(new Game.Menu("Lenny proceeds to eat the burger. Don't you wanna eat your burger too?",1));
 Game.menus[2].addbutton("I wanna eat my burger please",3,0,0,0);
 
-Game.menus.push(new Game.Menu("Lenny:\"I miss when burgers looked like forks\"",0));
+Game.menus.push(new Game.Menu("Lenny:\"I miss when burgers looked like forks\"",1));
 Game.menus[3].addbutton("Agree",4,0,0,0);
 
-Game.menus.push(new Game.Menu("Lenny:\"I think we should go\"",0));
+Game.menus.push(new Game.Menu("Lenny:\"I think we should go\"",1));
 Game.menus[4].addbutton("I think we should go",5,0,0,0);
 
-Game.menus.push(new Game.Menu("Both Lenny and you try walk out of the Hospital after eating the burgers but David Bowie blocks the way, He's about to sing his new song just for you.",0));
+Game.menus.push(new Game.Menu("Both Lenny and you try walk out of the Hospital after eating the burgers but David Bowie blocks the way, He's about to sing his new song just for you.",2));
 Game.menus[5].addbutton("Listen",6,0,0,0);
 
-Game.menus.push(new Game.Menu("David Bowie:\"This is a new song i wrote just for you, it's called Let It Be\". Backstage musicians start to play and David Bowie sings the first lines :<p>When I find myself in times of trouble<p>Mother Mary comes to me<p>Speaking words of wisdom",0));
+Game.menus.push(new Game.Menu("David Bowie:\"This is a new song i wrote just for you, it's called Let It Be\".<p>Backstage musicians start to play and David Bowie sings the first lines :<p>\"When I find myself in times of trouble<p>Mother Mary comes to me<p>Speaking words of wisdom\"",2));
 Game.menus[6].addbutton("LET IT BE",7,0,0,0);
 
-Game.menus.push(new Game.Menu("David Bowie:\"That's my favorite song to play, i am glad you lads appreciate it.\"",0));
+Game.menus.push(new Game.Menu("David Bowie:\"That's my favorite song to play, i am glad you lads appreciate it.\"",2));
 Game.menus[7].addbutton("David Bowie is my one and only lord",8,0,0,0);
 
-Game.menus.push(new Game.Menu("David Bowie:\"Why are you starting to scream, it's awful.\"<p> You notice uncontrollable sounds start to come out of your mouth.",0));
+Game.menus.push(new Game.Menu("David Bowie:\"Why are you starting to scream, it's awful.\"<p> You notice uncontrollable sounds start to come out of your mouth.",2));
 Game.menus[8].addbutton("Scream",9,0,0,0);
 
-Game.menus.push(new Game.Menu("You continue to scream inhumane sounds",0));
+Game.menus.push(new Game.Menu("You continue to scream inhumane sounds",3));
 Game.menus[9].addbutton("Scream",10,0,0,0);
 
-Game.menus.push(new Game.Menu("Please stop it now",0));
+Game.menus.push(new Game.Menu("Please stop it now",3));
 Game.menus[10].addbutton("Scream",11,0,0,0);
 
-Game.menus.push(new Game.Menu("WHY AREN'T YOU LISTENING TO ME!!!",0));
+Game.menus.push(new Game.Menu("WHY AREN'T YOU LISTENING TO ME!!!",3));
 Game.menus[11].addbutton("Scream",12,0,0,0);
 Game.menus[11].addbutton("Scream",12,0,0,0);
 
-Game.menus.push(new Game.Menu("",0));
+Game.menus.push(new Game.Menu("",3));
 Game.menus[12].addbutton("Scream",13,0,0,0);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",0));
+Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[13].addbutton("Scream",14,0,0,0);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",0));
+Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
@@ -160,54 +217,54 @@ Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",0));
+Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[15].addbutton(" ",16,0,0,0);
 
-Game.menus.push(new Game.Menu("...",0));
+Game.menus.push(new Game.Menu("...",3));
 Game.menus[16].addbutton("Hmmm...",17,0,0,0);
 
-Game.menus.push(new Game.Menu("You start to gain back consciousness, you realise the sounds were actually coming from your neighbor using his fucking drill, you're pissed, but at least you somewhat got to see David Bowie.",0));
+Game.menus.push(new Game.Menu("You start to gain back consciousness, you realise the sounds were actually coming from your neighbor using his fucking drill, you're pissed, but at least you somewhat got to see David Bowie.",4));
 Game.menus[17].addbutton("Fine...",18,0,0,0);
 
 //now i think the game will start to fork after waking up
 
-Game.menus.push(new Game.Menu("You remember how miserable you are laying on your bed, what do you want to do?",0));
+Game.menus.push(new Game.Menu("You remember how miserable you are laying on your bed, what do you want to do?",4));
 Game.menus[18].addbutton("Try to get back to sleep",19,0,0,0);
-Game.menus[18].addbutton("Get out of bed",30,0,0,0);
+Game.menus[18].addbutton("Get out of bed",31,0,0,0);
 
-Game.menus.push(new Game.Menu("You close your eyes, you put your head back onto your pillows and hide inside your sheets,if you pretend like you're sleeping, maybe that will get you back to sleep.",0));
+Game.menus.push(new Game.Menu("You close your eyes, you put your head back onto your pillows and hide inside your sheets,if you pretend like you're sleeping, maybe that will get you back to sleep.",4));
 Game.menus[19].addbutton("I will pretend like I am sleeping",20,0,0,0);
 
-Game.menus.push(new Game.Menu("What a miserable pile of junk you are",0));
+Game.menus.push(new Game.Menu("What a miserable pile of junk you are",4));
 Game.menus[20].addbutton("Shut up!",21,0,0,0);
 
-Game.menus.push(new Game.Menu("You start to get warm and warmer, you're angry, utterly pissed and nervous. But OF COURSE you'll get back to sleep, it always happen like that. By the way the guy's still using his drill and it doesn't seem like he's about to stop any time soon",0));
+Game.menus.push(new Game.Menu("You start to get warm and warmer, you're angry, utterly pissed and nervous. But OF COURSE you'll get back to sleep, it always happen like that. By the way the guy's still using his drill and it doesn't seem like he's about to stop any time soon",4));
 Game.menus[21].addbutton("Please stop",22,0,0,0);
 
-Game.menus.push(new Game.Menu("You proceed to give up, again, you're getting used to it and, I must say, pretty good at it",0));
+Game.menus.push(new Game.Menu("You proceed to give up, again, you're getting used to it and, I must say, pretty good at it",4));
 Game.menus[22].addbutton("I will continue to give up",23,0,0,0);
 Game.menus[22].addbutton("Get out of bed",30,0,0,0);
 
-Game.menus.push(new Game.Menu("You are a slug, a pile of meat and goo, you merely exist and you somehow manage to stay alive, you like to give up and will continue to stay still, that's your motto",0));
-Game.menus[23].addbutton("I am a slug, a pile of meat and goo, I merely exist and I somehow manage to stay alive, I like to give up and will continue to stay still, that's my motto",24,0,0,0);
+Game.menus.push(new Game.Menu("You are a slug, a pile of meat and goo, you merely exist and you somehow managed to stay alive, you like to give up and will continue to stay still, that's your motto",4));
+Game.menus[23].addbutton("I am a slug, a pile of meat and goo, I merely exist and I somehow managed to stay alive, I like to give up and will continue to stay still, that's my motto",24,0,0,0);
 Game.menus[23].addbutton("Get out of bed...",30,0,0,0);
 
-Game.menus.push(new Game.Menu("You won't get out of bed won't you",0));
+Game.menus.push(new Game.Menu("You won't get out of bed won't you",4));
 Game.menus[24].addbutton("Let me sleep",25,0,0,0);
 Game.menus[24].addbutton("OK I'LL GET OUT",30,0,0,0);
 
-Game.menus.push(new Game.Menu("You will NOT sleep, stop believing",0));
+Game.menus.push(new Game.Menu("You will NOT sleep, stop believing",4));
 Game.menus[25].addbutton("Get out of bed like a true warrior",30,0,0,0);
 Game.menus[25].addbutton("Continue to believe in utter lies",26,0,0,0);
 
-Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now get out of bed",0));
+Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now get out of bed",4));
 Game.menus[26].addbutton("No",27,0,0,0);
 
-Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now GET OUT OF BED",0));
+Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now GET OUT OF BED",4));
 Game.menus[27].addbutton("<h3>Get out of bed because it is the obvious smart choice</h3>",30,0,0,0);
 Game.menus[27].addbutton("No, I am a pile of shit",28,0,0,0);
 
-Game.menus.push(new Game.Menu("Get out of bed",0));
+Game.menus.push(new Game.Menu("Get out of bed",4));
 Game.menus[28].addbutton("Ok i'll get out...",30,0,0,0);
 Game.menus[28].addbutton("No, I am miserable and useless",28,0,0,0);
 //the player has to click a few times before getting the following end
@@ -215,9 +272,93 @@ Game.menus.push(new Game.Menu("Well you know what, congrats, you win. You are in
 
 //got out of bed fork:
 
-Game.menus.push(new Game.Menu("Work in progress...",0));
+Game.menus.push(new Game.Menu("Sir you've made the good choice",4));
+Game.menus[30].addbutton("Blush",31,0,0,0);
 
-Game.refresh()
+Game.menus.push(new Game.Menu("Neat, but now you realize one does not simply get out of bed",4));
+Game.menus[31].addbutton("Oh..",32,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[32].addbutton("Lift right arm",33,0,0,0);
+Game.menus[32].addbutton("Get back to sleep like a coward",19,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[33].addbutton("Lift left arm",34,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[34].addbutton("Lift Torso",35,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[35].addbutton("Lift right leg",36,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[36].addbutton("Lift left leg",37,0,0,0);
+
+Game.menus.push(new Game.Menu("What are you gonna do now?",4));
+Game.menus[37].addbutton("Stand up",38,0,0,0);
+
+Game.menus.push(new Game.Menu("Wow that was a tedious process, but you've done it!",0));
+Game.menus[38].addbutton("Phew",39,0,0,0);
+//congrats now you got out of bed, let's see what's next
+
+Game.menus.push(new Game.Menu("You're now standing up, feeling dizzy, as usual. You feel like the day is already wasted and you are right",0));
+Game.menus[39].addbutton("Complain",40,0,0,0);
+
+Game.menus.push(new Game.Menu("Of course the logical thing to do is to complain, right. Always fixed the issue",0));
+Game.menus[40].addbutton("You're getting on my nerves",41,0,0,0);
+
+Game.menus.push(new Game.Menu("Haha I'm teasing you",0));
+Game.menus[41].addbutton("Man purposely limited my answers, what an ass",42,0,0,0);
+
+Game.menus.push(new Game.Menu("It is morning, you can hear the birds chirping to death due to pollution, the sound of trafic, as well as the sound of your neighbor's drill. You feel like you need to pee, what are you gonna do.",5));
+Game.menus[42].addbutton("Let's pee",43,0,0,0);   //the trick is that one of these buttons is gonna change a variable which will have consequences in the future
+Game.menus[42].addbutton("Real men don't pee",51,0,0,0);
+
+Game.menus.push(new Game.Menu("You open the bathroom door, and delicately place your butt on the toilet seat",5));
+Game.menus[43].addbutton("Pee",44,0,0,0);
+
+Game.menus.push(new Game.Menu("The delicate sound of urine can be heard",5));
+Game.menus[44].addbutton("Pee",45,0,0,0);
+
+Game.menus.push(new Game.Menu("Hmmm this feels good, right?",5));
+Game.menus[45].addbutton("Oh yeah man (LET IT PEE)",46,0,0,0);
+
+Game.menus.push(new Game.Menu("Looks like you're almost done",5));
+Game.menus[46].addbutton("Wiggle",47,0,0,0);
+
+Game.menus.push(new Game.Menu("The final drop of pee has come out, you are now done, doesn't this feel nice?",5));
+Game.menus[47].addbutton("Oh yeah man (Put panties back)",48,0,0,0);
+
+Game.menus.push(new Game.Menu("Neat",0));
+Game.menus[48].addbutton("Wash your hands",49,0,0,0);
+Game.menus[48].addbutton("Don't wash your hands",50,0,0,0); //this will probably do some funny stuff in the future
+
+Game.menus.push(new Game.Menu("You proceed to wash your hands, now they feel fresh, clean and soft",6));
+Game.menus[49].addbutton("Get back to bedroom",51,0,0,0);
+
+Game.menus.push(new Game.Menu("Disgusting",0));
+Game.menus[50].addbutton("Get back to bedroom",51,0,0,0);
+
+Game.menus.push(new Game.Menu("You now wonder what you are gonna do with your day",4));
+Game.menus[51].addbutton("Get back to sleep",52,0,0,0);
+Game.menus[51].addbutton("Touch grass",53,0,0,0);
+
+Game.menus.push(new Game.Menu("Are you serious?",0));
+Game.menus[52].addbutton("Nah, joking",51,0,0,0);
+Game.menus[52].addbutton("Yeah",18,0,0,0);
+
+Game.menus.push(new Game.Menu("Hell no you can't do that yet. this is a<p><h2>WORK IN PROGRESS</h2> baby",0));
+Game.menus[53].addbutton("Oh...",51,0,0,0);
+
+
+
+Game.refresh() //begin the begin
+
+
+
+//orteil would be proud
+
+
 </script>
 <style>#game{margin:auto;margin-top:200px;border:1px solid black;width:400px;height:270px;text-align:center;padding-top:30px;}</style>
 </html>
