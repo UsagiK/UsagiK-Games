@@ -17,31 +17,45 @@ No need to remind you that this is a SPOILER ZONE, don't read it if you don't wa
 To add:
 -obviously, more absurd stories and more endings
 -salt
--passive aggressive comments if the game remember you didn't wash your hands
+-more passive aggressive
 -disgusting jokes
--cookie clicker (i'm legit, that and other minigames hidden at some pages)
+-more cookies
+-more minigames
 -saving system
 -more jokes in source CODE
+-more music references
+-secret routes
+-tree
+-juiciness
 
 To avoid:
 -becoming homestuck
 -death
+-typos (help)
 
 Update Log:
-(7/26/2023) V1: did the first version of the game in a few hours out of despair, with pretty drawings made with the mouse
-(7/27/2023) V2: continued the get out of bed "storyline" and added more succulent jokes (and pretty drawings made with the mouse
+(7/26/2023) V1: Did the first version of the game in a few hours out of despair, with pretty drawings made with the mouse
+(7/27/2023) V2: Continued the get out of bed "storyline" and added more succulent jokes (and pretty drawings made with the mouse)
+(7/28/2023) V3: Added Cookie Clicker, Minecraft and a secret ending
 
-https://usagik.tumblr.com 2023 (check out my tumblr!!)
+https://usagik.github.io/UsagiK-Games/buttongame/buttons.html 2023
+https://usagik.tumblr.com (<-- check out my tumblr!!)
 
 sorry if i'm bad, i'm french
+
+Put together with duktape, made with love
+
 */
+function choose(arr) {return arr[Math.floor(Math.random()*arr.length)];} //~~stolen~~ borrowed function from cookie clicker
+
+
 Game={};
 
 Game.page=0;
 Game.evil=0;
 Game.tick=0;
 Game.menus=[];
-Game.backgrounds=["url('img/nope')","url('img/4 yikes burger.png')",'url("img/bavid dowie.png")','url("img/drill.png")','url("img/bed.png")','url("img/piss.png")','url("img/soap.png")']; //this is a very smart trick, because images aren't actually loaded and there's gonna be DELAY hehe 
+Game.backgrounds=["url('img/nope')","url('img/4 yikes burger.png')",'url("img/bavid dowie.png")','url("img/drill.png")','url("img/bed.png")','url("img/piss.png")','url("img/soap.png")','url("img/pc.png")']; //this is a very smart trick, because images aren't actually loaded and there's gonna be DELAY hehe 
 Game.div=document.getElementById("game");
 
 
@@ -56,6 +70,10 @@ Game.refresh=function(){
 	Game.div.innerHTML=Game.menus[Game.page].text;
 	button=document.createElement("button");
 	
+	
+	news= NaN;
+	clearInterval(news); //such a dirty way
+	
 	for (let i=0; i<Game.menus[Game.page].buttons.length; i++){
 	
 	//gah
@@ -69,27 +87,29 @@ Game.refresh=function(){
 	
 	Game.div.style.backgroundImage=Game.backgrounds[Game.menus[Game.page].background]
 	
-	//grr this is bad coding, this chunk of code is for the desesperatly try to sleep back ending at page 28
 	
 	
-	if(Game.tick>128){
+	
+	if(Game.tick>128){ //grr this is bad coding, this is for the desesperatly try to sleep back ending at page 28
 		Game.menus[28].buttons[1].menugoto=29;
 	}
-	//this is terrible
-	/*
-	if(Game.page>0 && Game.page<5){
-		Game.div.style.backgroundImage="url('img/4 yikes burger.png')";
+
+	
+
+	if(Game.page==56){ //mini cooker
+	
+		Cookie.draw();
+		clearInterval(news);
+		news = setInterval(Cookie.ticker, 10000);	
 	}
-	else if(Game.page>4 && Game.page<10){
-		Game.div.style.backgroundImage='url("img/bavid dowie.png")';
+
+	
+	if(Game.page==57){ //minecraft BOYS
+		Game.div.style.backgroundImage="url('img/dirt.png')"; //i'm sorry for the very ugly dirt texture
+		Game.div.innerHTML=Minecraft.HTML;
+		Minecraft.refresh();
+		
 	}
-	else if(Game.page>9 && Game.page<18){
-		Game.div.style.backgroundImage='url("img/drill.png")';
-	}
-	else if(Game.page>17 && Game.page<29){
-		Game.div.style.backgroundImage='url("img/bed.png")';
-	}
-	*/
 
 }
 
@@ -129,9 +149,6 @@ Game.buttonclick=function(menuid,buttonid){
 		 else if (menuid==42 && buttonid==0){
 			Game.piss=0;
 		 }
-		 else if (menuid==48 && buttonid==0){
-			Game.nowash=0;
-		 }
 		
 		
 		
@@ -152,6 +169,154 @@ Game.buttonclick=function(menuid,buttonid){
 }
 
 
+//welcome to aliexpress cookie clicker (the only point of this are the ticker messages)
+
+
+Cookie={};
+
+Cookie.cookies=0;
+
+Cookie.HTML="<div id='left' style='color:white;min-width:110px ;max-width:110px; min-height:300px; max-height:300px; margin:auto; box-shadow: 0 -40px 60px 0 black inset; margin-top:-30px; float:left;'><div style='font-size:11px;margin:auto;margin-top:20px;max-width:90px;background-color:rgba(0,0,0,0.5);border-radius:10px;'>[Your name here]'s backery</div><div id='Cnumber' style='margin:auto;margin-top:10px;width:100%;background-color:rgba(0,0,0,0.5);'>COOKIES</div><div id='cookie' style='width:64px;height:64px;background-image:url(img/cookie.png);margin:auto;margin-top:30px;' onclick='Cookie.click()'></div></div> <div id='right' style='min-width:278px ;max-width:278px; min-height:300px; max-height:300px; margin:auto; box-shadow: 0 0 30px 0 black inset; margin-top:-30px;;float:right; border-left:12px solid black; border-image:url(img/tree.png) round 12;'><div id='ticker' onclick=\"Cookie.ticker()\" style='color:white; text-shadow: 0 0 2px black;font-size:12px;min-width:278px ;max-width:278px;min-height:64px;max-height:64px; box-shadow: 0 0 15px 0 black inset; margin:auto;;float:right; border-bottom:12px solid black; border-image:url(img/tree2.png) round 12;'>You feel like making cookies but you fucking suck</div><button style='float:right;margin:10px;' onclick='Game.page=55;Game.refresh();'>Quit</button></div>"; //sorry
+
+
+Cookie.draw=function(){
+	Game.div.style.backgroundImage="url('img/wallpaper.png')";
+		Game.div.innerHTML=Cookie.HTML;
+		Cookie.refresh();
+}
+
+Cookie.refresh=function(){
+
+	if(Cookie.cookies==1){
+		document.getElementById("Cnumber").innerHTML=Cookie.cookies+" Cookie";
+	}
+	else{
+		document.getElementById("Cnumber").innerHTML=Cookie.cookies+" Cookies";
+	}
+}
+
+Cookie.click=function(){
+	Cookie.cookies+=1;
+	Cookie.refresh();
+}
+
+Cookie.ticker=function(){
+	Cookie.list=[];
+	
+	
+	if(Game.piss==1){
+		Cookie.list.push("Don't forget to take a little break to pee") //if you didn't go to pee
+	}
+	if(Game.nowash==1){
+		Cookie.list.push('"This man doesn\'t wash his hands!", says specialist') //if you don't wash your hands
+	}
+
+	//music references
+	
+	Cookie.list.push(choose(["\"See you at the bitter end\"", "\"I'm a creep, I'm a weirdo. What the hell am i doing here? I don't belong here\"","\"Is there life on Mars?\" No you dumbass!","\"I genuinley think Bono is the greatest artist of the last century\" declares Bono"]));
+
+
+	//grandmas
+
+	Cookie.list.push(choose(["\"Hey kid, wanna click some cookies?\"<p>-grandma","\"Come give grandma a hand job\"<p>-grandma","\"You little fuck\"<p>-grandma","\"We are grandmas, we are legion\"<p>-grandmas"]));
+	
+	
+	//idk
+
+	Cookie.list.push(choose(["It's time to stop playing","Get yourself a life","Connection lost ......<p>Please wait - attempting to reestablish","RAN RAN RUU","Hello everynyan"]));
+	
+	
+	//cookie clicker
+
+	Cookie.list.push(choose(["Life is like cookie clicker, a single game of cookie clicker, and all of us are cursors struggling clicking cookies to feed the greedy capitalists","The LGBTQ+ community has forgiven orteil42","-\"Why are you playing that cookie clicker?\"<p>-\"Because the numbers go up you dumbass!\"","Are you proud of me Orteil?","Maybe the real treasure was the cookies we made along the way","Happy 10th anniversary Cookie Clicker!"]));
+	
+	
+	//advices
+
+	Cookie.list.push(choose(["It's time to switch to Firefox, install uBlock Origin and use either DuckDuckGo or Ecosia","If you're thinking about singing up to Threads after the Twitterpocalypse, go to Mastodon instead","Don't forget to drink water"]));
+	
+	
+	//politics (more like common sense sometimes...)
+
+	Cookie.list.push(choose(["Economist declares : \"Tax the riches\". \"No\", answers rich person.","Rich person buys social media, turns it into porn site.","\"Don't be racist, I am a building\" declares building","Tax the riches","This is the future the liberals want for your kids!!! *points at bright future*"]));
+	
+	
+	//furries
+
+	Cookie.list.push(choose(["Man robs house, finds fursuit \"Well as long at it fits\"","Do not google all the single furries, worst mistake of my life","Furry found not using Linux, death is approching","\"I think furries should die\" declares closeted furry","Former anti-furry became furry, no one is surprised"]));
+	
+	
+	
+	document.getElementById("ticker").innerHTML=choose(Cookie.list);
+	
+	
+}
+
+//free minecraft crack official 2012
+
+Minecraft={};
+
+Minecraft.mines=0;
+Minecraft.crafts=0;
+
+Minecraft.HTML="<div style='height:300px; margin-top:-50px; box-shadow: 0 0 500px 0 black inset; color:white;'><h2 style='padding-top:20px'>MINECRAFT</h2><div id='Minfo' style='padding:5px;border:1px solid white; margin:auto;min-height:40px;max-width:200px;display:inline-block;'>Welcome to real Minecraft</div><div id='buttons' style='margin:10px;'><button onclick='Minecraft.mine()' style='margin:10px;'>Mine</button><button onclick='Minecraft.craft()' style='margin:10px;'>Craft</button><button onclick='Game.page=55;Game.refresh();' style='margin:10px;'>Quit</button></div><div id=mines style='font-size:12px;'></div><div id=crafts style='font-size:12px;'></div></div>"
+
+Minecraft.refresh=function(){
+
+	if(Minecraft.mines==1){
+		document.getElementById("mines").innerHTML="you have "+Minecraft.mines+" mine";
+	}
+	else{
+		document.getElementById("mines").innerHTML="you have "+Minecraft.mines+" mines";
+	}
+	
+	if(Minecraft.crafts==1){
+		document.getElementById("crafts").innerHTML="you have "+Minecraft.crafts+" craft";
+	}
+	else{
+		document.getElementById("crafts").innerHTML="you have "+Minecraft.crafts+" crafts";
+	}
+	
+	//secret ending
+	
+	if(Minecraft.crafts==69 || Minecraft.mines==420 || Minecraft.crafts==420 || Minecraft.mines==69){
+		
+		document.getElementById("buttons").innerHTML+="<button onclick='Game.page=58;Game.refresh();' style='margin:10px;'>Funny numbers LOL</button>"
+	}
+}
+
+Minecraft.craft=function(){
+	if(Minecraft.mines<9){
+		document.getElementById("Minfo").innerHTML="You need at least 9 mines to be able to make a craft, you need "+(9-Minecraft.mines)+" more, dumbass";
+	}
+	else{
+		Minecraft.mines-=9;
+		Minecraft.crafts+=1;
+		document.getElementById("Minfo").innerHTML="Crafted 1 Craft successfully";
+	}
+	Minecraft.refresh();
+}
+
+Minecraft.mine=function(){
+
+	Minecraft.addmines=Math.floor(Math.random()*4);
+	
+	Minecraft.mines+=Minecraft.addmines;
+	Minecraft.refresh();
+	
+	if(Minecraft.addmines==0){
+		document.getElementById("Minfo").innerHTML="You mined NOTHING, sucks to be you";
+	}
+	else if(Minecraft.addmines==1){
+	document.getElementById("Minfo").innerHTML="You mined a single mine";
+	}
+	else{
+		document.getElementById("Minfo").innerHTML="You mined "+Minecraft.addmines+" mines";
+	}
+	
+	
+}
+
 
 
 /*ALL MENUS AND BUTTONS ARE CODED HERE HEYYO
@@ -160,15 +325,24 @@ Game.buttonclick=function(menuid,buttonid){
 Page:
 0 - Start Button
 1 to 17 - The dream
-18 to 29 - The stay in bed ending
+18 to 29 - Stay in bed ending
 30 to ??? - get out of bed route
 
+56 - Cookie Clicker
+57 - Minecraft (Minecraft 3d, 2d edition)
+58 - Funny number ending (only obtainable through the minecraft minigame)
 
 */
 
+
+
 //Start menu
-Game.menus.push(new Game.Menu("",0));
+Game.menus.push(new Game.Menu("<h2>The Button Game</h2>",0));
 Game.menus[0].addbutton("start",1,0,0,0);
+//Game.menus[0].addbutton("cookie",56,0,0,0);
+//Game.menus[0].addbutton("minecraft",57,0,0,0);
+
+
 
 //the dream
 Game.menus.push(new Game.Menu("Lenny:\"Damn, I was sure burgers where purple, guess they're using green spraypaint, probably to look ecofriendly.\"",1)); //man you haven't heard about gay spraypaint (private joke)
@@ -212,7 +386,7 @@ Game.menus[12].addbutton("Scream",13,0,0,0);
 Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[13].addbutton("Scream",14,0,0,0);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
+Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
@@ -220,7 +394,7 @@ Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 Game.menus[14].addbutton("Scream",15,0,0,0);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
+Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3));
 Game.menus[15].addbutton(" ",16,0,0,0);
 
 Game.menus.push(new Game.Menu("...",3));
@@ -228,6 +402,8 @@ Game.menus[16].addbutton("Hmmm...",17,0,0,0);
 
 Game.menus.push(new Game.Menu("You start to gain back consciousness, you realise the sounds were actually coming from your neighbor using his fucking drill, you're pissed, but at least you somewhat got to see David Bowie.",4));
 Game.menus[17].addbutton("Fine...",18,0,0,0);
+
+
 
 //now i think the game will start to fork after waking up
 
@@ -241,7 +417,7 @@ Game.menus[19].addbutton("I will pretend like I am sleeping",20,0,0,0);
 Game.menus.push(new Game.Menu("What a miserable pile of junk you are",4));
 Game.menus[20].addbutton("Shut up!",21,0,0,0);
 
-Game.menus.push(new Game.Menu("You start to get warm and warmer, you're angry, utterly pissed and nervous. But OF COURSE you'll get back to sleep, it always happen like that. By the way the guy's still using his drill and it doesn't seem like he's about to stop any time soon",4));
+Game.menus.push(new Game.Menu("You start to get warm and warmer, you're angry, utterly pissed and nervous. But OF COURSE you'll get back to sleep, it always happens like that. By the way the guy's still using his drill and it doesn't seem like he's about to stop any time soon",4));
 Game.menus[21].addbutton("Please stop",22,0,0,0);
 
 Game.menus.push(new Game.Menu("You proceed to give up, again, you're getting used to it and, I must say, pretty good at it",4));
@@ -272,6 +448,7 @@ Game.menus[28].addbutton("Ok i'll get out...",30,0,0,0);
 Game.menus[28].addbutton("No, I am miserable and useless",28,0,0,0);
 //the player has to click a few times before getting the following end
 Game.menus.push(new Game.Menu("Well you know what, congrats, you win. You are indeed a winner, you somehow managed to get back to sleep for a few hours. You wake up at 5pm with a headache, neckpain and as many cramps as there are muscles in the human body, this is among the worst sleeps you ever had in your life, you're feeling completely dizzy and miserable. Are you happy now? <p> <h2>THE END</h2>",0));
+Game.menus[29].addbutton("Start over again",1,0,0,0);
 
 //got out of bed fork:
 
@@ -345,6 +522,7 @@ Game.menus[50].addbutton("Get back to bedroom",51,0,0,0);
 Game.menus.push(new Game.Menu("You now wonder what you are gonna do with your day",4));
 Game.menus[51].addbutton("Get back to sleep",52,0,0,0);
 Game.menus[51].addbutton("Touch grass",53,0,0,0);
+Game.menus[51].addbutton("Turn on computer",54,0,0,0);
 
 Game.menus.push(new Game.Menu("Are you serious?",0));
 Game.menus[52].addbutton("Nah, joking",51,0,0,0);
@@ -353,6 +531,26 @@ Game.menus[52].addbutton("Yeah",18,0,0,0);
 Game.menus.push(new Game.Menu("Hell no you can't do that yet. this is a<p><h2>WORK IN PROGRESS</h2> baby",0));
 Game.menus[53].addbutton("Oh...",51,0,0,0);
 
+Game.menus.push(new Game.Menu("You turn on your computer, but Windows needs to update",7));
+Game.menus[54].addbutton("Fuck",55,0,0,0);
+
+Game.menus.push(new Game.Menu("Many moments later your computer has finally fully booted, what do you want to do?",7));
+Game.menus[55].addbutton("Play Cookie Clicker",56,0,0,0);
+Game.menus[55].addbutton("Play Minecraft",57,0,0,0);
+Game.menus[55].addbutton("Turn the computer off and leave",51,0,0,0);
+
+
+//cookie clicker BOYS
+Game.menus.push(new Game.Menu("",0));
+
+
+// MINECRAFT (notch would be proud)
+Game.menus.push(new Game.Menu("",0));
+
+
+//funny number ending
+Game.menus.push(new Game.Menu("Thanks to your dedication and your rather quite elaborate sense of humor, you managed to find this secret ending. Consider your hard work rewarded. Congratulation. <p> <h2>THE END</h2>",0));
+Game.menus[58].addbutton("Start over again",1,0,0,0);
 
 
 Game.refresh() //begin the begin
@@ -363,5 +561,25 @@ Game.refresh() //begin the begin
 
 
 </script>
-<style>#game{margin:auto;margin-top:200px;border:1px solid black;width:400px;height:270px;text-align:center;padding-top:30px;}</style>
+<style>
+
+html{
+	overflow:hidden;
+}
+
+#game{margin:auto;margin-top:200px;border:1px solid black;width:400px;height:270px;text-align:center;padding-top:30px;}
+
+#cookie:active{
+	background-position:-64px;
+}
+#cookie:hover{
+	cursor:pointer;
+}
+
+#ticker:hover{
+	cursor:pointer;
+	text-shadow: 0 0 4px black; /*why won't this work */
+}
+
+</style>
 </html>
