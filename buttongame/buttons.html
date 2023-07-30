@@ -4,8 +4,20 @@
 <meta content="The game in which you click buttons and it does stuff" property="og:description" />
 <meta content="https://usagik.github.io/UsagiK-Games/buttongame/buttons.html" property="og:url" />
 <meta content="#9900cc" name="theme-color" /></head>
-<body><div id="updatelog">
-<div style="margin-left:6px;">Update log:</div>
+<!--Heyo-->
+<body>
+<div id="page">
+
+<div id="updatelog">
+<div style="background-color:white; margin-left:6px; position:sticky;top:0;">Update log:</div>
+
+<div style="margin-left:6px;">(7/30/2023) V5:</div>
+<ul>
+<li>Added little icons on the page map</li>
+<li>Better CSS, game should look better on mobile</li>
+<li>Other Minor fixes</li>
+<li>(No new content)</li>
+</ul>
 
 <div style="margin-left:6px;">(7/29/2023) V4:</div>
 <ul>
@@ -34,10 +46,13 @@
 </ul>
 </div>
 
+<div id="game">This game requires Javascript</div>
 <div id="pagemap">pages</div>
-<div id="game"></div>
-<div id="credits">This game was made by UsagiK (check out my <a href="https://usagik.tumblr.com">Tumblr</a>!!). 2023 V4</div>
+<div id="credits">This game was made by UsagiK (check out my <a href="https://usagik.tumblr.com" target="_blank">Tumblr</a>!!). 2023 | V5</div>
+
+</div>
 </body>
+
 <script>
 
 
@@ -56,7 +71,7 @@ To add:
 -more minigames
 -saving system
 -more jokes in source CODE
--more music references
+-more music references //note 7/30/2023 IT IS TOO MUCH ALREADY 
 -secret routes
 -tree
 -juiciness
@@ -72,15 +87,19 @@ Update Log:
 (7/27/2023) V2: Continued the get out of bed "storyline" and added more succulent jokes (and pretty drawings made with the mouse)
 (7/28/2023) V3: Added Cookie Clicker, Minecraft and a secret ending
 (7/29/2023) V4: Introducing the new page map, makes it easier to wonder and play around. Added a few Cookie Clicker news text, Added Discord as a secret before adding all the features I want to make (hint: scream), little fixes
+(7/30/2023) V5:Added little icons on the page map. Game should be playable on mobile now. Other Minor fixes
 
 https://usagik.github.io/UsagiK-Games/buttongame/buttons.html 2023
 https://usagik.tumblr.com (<-- check out my tumblr!!)
 
 sorry if i'm bad, i'm french
 
-Put together with duktape, made with love
+Put together with ducktape, made with love
+
+lots of ducktape
 
 */
+
 function choose(arr) {return arr[Math.floor(Math.random()*arr.length)];} //~~stolen~~ borrowed function from cookie clicker
 
 function contains(a, obj) { //~~stolen~~ borrowed function from stackoverflow (i'm da british museum baby)
@@ -103,6 +122,7 @@ Game.tick=0;
 Game.menus=[];
 Game.div=document.getElementById("game");
 Game.unlocked=[];
+Game.version=5;
 
 news= "";
 
@@ -114,13 +134,13 @@ Game.nowash=0;
 Game.refresh=function(){
 
 	//refresh HTML
-	Game.div.innerHTML=Game.menus[Game.page].text;
+	Game.div.innerHTML="<div style='margin:6px; margin-top:30px'>"+Game.menus[Game.page].text+"</div>";
 	button=document.createElement("button");
 	Game.div.style.backgroundImage="url('img/BG.png')";
 	
 	
 	
-	clearInterval(news); //such a dirty way //btw that doesn't even work
+	clearInterval(news);
 	
 	for (let i=0; i<Game.menus[Game.page].buttons.length; i++){
 	
@@ -142,18 +162,31 @@ Game.refresh=function(){
 	Game.unlocked.sort(function(b, a){return b - a});
 	
 	
-	document.getElementById("pagemap").innerHTML="<div style=\"background-color:white;position:sticky;top: 0;margin:auto;border-bottom:1px solid black;width:auto;height:14px;font-size:11px;text-align:left;\">Page Map<span id='progress' style='float:right;'>"+Game.unlocked.length+"/"+Game.menus.length+" pages discovered</span</div>"
+	document.getElementById("pagemap").innerHTML="<div style=\"background-color:white;z-index:3;position:sticky;top: 0;margin:auto;border-bottom:1px solid black;width:auto;height:14px;font-size:11px;text-align:left;\">Page Map<span id='progress' style='float:right;'>"+Game.unlocked.length+"/"+Game.menus.length+" pages discovered</span</div>"
 	
 	
 	for (let i=0; i<Game.unlocked.length; i++){
 		butt=document.createElement("div");
 		butt.setAttribute("id","mapbutton");
+
 		
 		butt.setAttribute("onclick","Game.page="+Game.unlocked[i]+";Game.refresh()");
 		if(Game.menus[Game.unlocked[i]].special==1){butt.setAttribute("style","color:white;background-color:black; border:1px solid white;")}
 		if(Game.menus[Game.unlocked[i]].title!==undefined){butt.innerHTML=Game.menus[Game.unlocked[i]].title}
 		else{butt.innerHTML=Game.unlocked[i]}
+				
+		
+		if(Game.menus[Game.unlocked[i]].icon!==undefined){ //add the icon (if there is one)
+			icon=document.createElement("div");
+			icon.setAttribute("style","float:right;display:inline-block;margin-right:6px;height:12px;width:12px;background-image:url(\'img/icons.png\'); background-position:"+(Game.menus[Game.unlocked[i]].icon)*-12 +"px;" )
+			butt.appendChild(icon);
+		
+		}
+		
+		if(Game.menus[Game.unlocked[i]].special==1){butt.setAttribute("style","color:white;background-color:black; border:1px solid white;")}
+		
 		document.getElementById("pagemap").appendChild(butt);
+		
 		
 	}
 	
@@ -194,12 +227,13 @@ Game.refresh=function(){
 
 
 
-Game.Menu=function(text,background,title,special){
+Game.Menu=function(text,background,title,special,icon){
 	this.text=text;
 	this.background=background;
 	this.buttons=[];
 	this.title=title;
 	this.special=special; //either 0 or 1 (it's for the page map!!)
+	this.icon=icon
 }
 
 Game.Menu.prototype.addbutton=function(text,menugoto,evilgoto,addevil,minevil){
@@ -207,12 +241,9 @@ Game.Menu.prototype.addbutton=function(text,menugoto,evilgoto,addevil,minevil){
 	}
 
 
-Game.Button=function(text,menugoto,evilgoto,addevil,minevil){
+Game.Button=function(text,menugoto){
 	this.text=text;
 	this.menugoto=menugoto;
-	this.evilgoto=evilgoto;
-	this.addevil=addevil;
-	this.minevil=minevil;
 	
 }
 
@@ -235,25 +266,14 @@ Game.buttonclick=function(menuid,buttonid){
 		
 		
 		
-		if (thatbutton.minevil>0 && Game.evil>=thatbutton.minevil){
-			//evil routine >:(
-			Game.page=thatbutton.evilgoto;
-			Game.tick+=1;
-			//document.getElementById("pagemap").scrollTop = Game.page*14;
-			document.getElementById("pagemap").scrollTop = 10000000;
-			//if(!(contains(Game.unlocked,thatbutton.evilgoto))){Game.unlocked.push(Game.page=thatbutton.evilgoto)};
-			Game.refresh();
-		}
-		
-		else{
-			Game.page=thatbutton.menugoto;
-			Game.tick+=1;
-			Game.evil+=thatbutton.addevil;
-			//document.getElementById("pagemap").scrollTop = Game.page*14; i wanted to make so it automatically focuses (scroll) to current page in the page map, i completely failed the task
-			document.getElementById("pagemap").scrollTop = 10000000; //bruh
+		Game.page=thatbutton.menugoto;
+		Game.tick+=1;
+		Game.evil+=thatbutton.addevil;
+		//document.getElementById("pagemap").scrollTop = Game.page*14; i wanted to make so it automatically focuses (scroll) to current page in the page map, i completely failed the task
+		document.getElementById("pagemap").scrollTop = 10000000; //bruh
 			
-			Game.refresh();
-		}
+		Game.refresh();
+
 		
 }
 
@@ -267,7 +287,7 @@ Cookie={};
 
 Cookie.cookies=0;
 
-Cookie.HTML="<div id='left' style='color:white;min-width:110px ;max-width:110px; min-height:300px; max-height:300px; margin:auto; box-shadow: 0 -40px 60px 0 black inset; margin-top:-30px; float:left;'><div style='font-size:11px;margin:auto;margin-top:20px;max-width:90px;background-color:rgba(0,0,0,0.5);border-radius:10px;'>[Your name here]'s backery</div><div id='Cnumber' style='margin:auto;margin-top:10px;width:100%;background-color:rgba(0,0,0,0.5);'>COOKIES</div><div id='cookie' style='width:64px;height:64px;background-image:url(img/cookie.png);margin:auto;margin-top:30px;' onclick='Cookie.click()'></div></div> <div id='right' style='min-width:278px ;max-width:278px; min-height:300px; max-height:300px; margin:auto; box-shadow: 0 0 30px 0 black inset; margin-top:-30px;;float:right; border-left:12px solid black; border-image:url(img/tree.png) round 12;'><div id='ticker' onclick=\"Cookie.ticker()\" style='color:white; text-shadow: 0 0 2px black;font-size:12px;min-width:278px ;max-width:278px;min-height:64px;max-height:64px; box-shadow: 0 0 15px 0 black inset; margin:auto;;float:right; border-bottom:12px solid black; border-image:url(img/tree2.png) round 12;'>You feel like making cookies but you fucking suck</div><button style='float:right;margin:10px;' onclick='Game.page=55;Game.refresh();'>Quit</button></div>"; //sorry
+Cookie.HTML="<div id='left' style='color:white;min-width:110px ;max-width:110px; height:300px; margin:auto; box-shadow: 0 -40px 60px 0 black inset; float:left;'><div style='font-size:11px;margin:auto;margin-top:20px;max-width:90px;background-color:rgba(0,0,0,0.5);border-radius:10px;'>[Your name here]'s backery</div><div id='Cnumber' style='margin:auto;margin-top:10px;width:100%;background-color:rgba(0,0,0,0.5);'>COOKIES</div><div id='cookie' style='width:64px;height:64px;background-image:url(img/cookie.png);margin:auto;margin-top:30px;' onclick='Cookie.click()'></div></div> <div id='right' style='min-width:278px ;max-width:278px; height:300px; margin:auto; box-shadow: 0 0 30px 0 black inset;float:right; border-left:12px solid black; border-image:url(img/tree.png) round 12;'><div id='ticker' onclick=\"clearInterval(news);news = setInterval(Cookie.ticker, 10000);Cookie.ticker()\" style='color:white; text-shadow: 0 0 2px black;font-size:12px;min-width:278px ;max-width:278px;min-height:64px;max-height:64px; box-shadow: 0 0 15px 0 black inset; margin:auto;;float:right; border-bottom:12px solid black; border-image:url(img/tree2.png) round 12;'>You feel like making cookies but you fucking suck</div><button style='float:right;margin:10px;' onclick='Game.page=55;Game.refresh();'>Quit</button></div>"; //sorry
 
 
 Cookie.draw=function(){
@@ -378,7 +398,7 @@ Minecraft={};
 Minecraft.mines=0;
 Minecraft.crafts=0;
 
-Minecraft.HTML="<div style='height:300px; margin-top:-50px; box-shadow: 0 0 500px 0 black inset; color:white;'><h2 style='padding-top:20px'>MINECRAFT</h2><div id='Minfo' style='padding:5px;border:1px solid white; margin:auto;min-height:40px;max-width:200px;display:inline-block;'>Welcome to real Minecraft</div><div id='buttons' style='margin:10px;'><button onclick='Minecraft.mine()' style='margin:10px;'>Mine</button><button onclick='Minecraft.craft()' style='margin:10px;'>Craft</button><button onclick='Game.page=55;Game.refresh();' style='margin:10px;'>Quit</button></div><div id=mines style='font-size:12px;'></div><div id=crafts style='font-size:12px;'></div></div>"
+Minecraft.HTML="<div style='height:300px; box-shadow: 0 0 500px 0 black inset; color:white; margin-top:-20px;'><h2 style='padding-top:50px'>MINECRAFT</h2><div id='Minfo' style='padding:5px;border:1px solid white; margin:auto;min-height:40px;max-width:200px;display:inline-block;'>Welcome to real Minecraft</div><div id='buttons' style='margin:10px;'><button onclick='Minecraft.mine()' style='margin:10px;'>Mine</button><button onclick='Minecraft.craft()' style='margin:10px;'>Craft</button><button onclick='Game.page=55;Game.refresh();' style='margin:10px;'>Quit</button></div><div id=mines style='font-size:12px;'></div><div id=crafts style='font-size:12px;'></div></div>"
 
 Minecraft.refresh=function(){
 
@@ -447,7 +467,7 @@ Minecraft.mine=function(){
 Discord={}
 
 Discord.messages=[]
-Discord.HTML="<div style='color:white;margin:auto;margin-top:-30px;background-color:black;border:1px solid white;width:auto;height:14px;font-size:13px;text-align:left;'>Discord (thanks to your determination you found this little secret)</div> <div id='messages' style='width:auto;height:240px;margin:auto;border-bottom:1px solid black;overflow:scroll;'></div><div id='answers'>This is a demo of something I'm making for the game! More features coming <button onclick='Game.page=0;Game.refresh();'>Back to start</button> </div>"
+Discord.HTML="<div style='color:white;margin:auto;background-color:black;border:1px solid white;width:auto;height:14px;font-size:13px;text-align:left;'>Discord (thanks to your determination you found this little secret) <div style='float:right;display:inline-block;margin-right:6px;height:12px;width:12px;background-image:url(\"img/icons.png\"); background-position:-60px;' ></div></div> <div id='messages' style='width:auto;height:240px;margin:auto;border-bottom:1px solid black;overflow:scroll;'></div><div id='answers'>This is a demo of something I'm making for the game! More features coming <button onclick='Game.page=0;Game.refresh();'>Back to start</button> </div>"
 
 Discord.refresh=function(){
 
@@ -464,9 +484,7 @@ Discord.Message=function(text,name,pfp,image){
 	this.image=image;
 	this.responses=[];
 	this.HTML="<div id='message' style='overflow: auto;background-color:white;width:auto;min-height:60px;height:auto;margin:auto;border:1px solid black;'> <div id='messcontent' style='padding:6px;float:right;width:324px;min-height:48px;text-align:left;'><span>"+this.name+"</span> <div style='font-size:12px;'>"+this.text+"</div>"+( function(image){if(!(image==undefined)){return "<img style='margin:auto;margin-top:6px;' src=\"img/boy.gif\" alt=\"boy.gif\">"}else{return ""} })(this.image)+"</div> <div id='pfp' style='margin:6px;border-radius:24px;height:48px;width:48px;background-image:url(\"img/PFP.png\"); background-position:"+(this.pfp*-48)+"px;'></div>  </div>";
-	console.log(this.HTML)
-	console.log(this.image)
-	console.log(!(this.image==undefined))
+
 
 }
 
@@ -508,226 +526,226 @@ Page:
 
 
 //Start menu
-Game.menus.push(new Game.Menu("<h2>The Button Game</h2>",0,"Start",1));
-Game.menus[0].addbutton("start",1,0,0,0);
-//Game.menus[0].addbutton("cookie",56,0,0,0);
-//Game.menus[0].addbutton("minecraft",57,0,0,0);
-//Game.menus[0].addbutton("discord",59,0,0,0);
+Game.menus.push(new Game.Menu("<h2>The Button Game</h2>",0,"Start",1,1));
+Game.menus[0].addbutton("Start",1);
+//Game.menus[0].addbutton("cookie",56);
+//Game.menus[0].addbutton("minecraft",57);
+//Game.menus[0].addbutton("discord",59);
 
 
 
 //the dream
 Game.menus.push(new Game.Menu("Lenny:\"Damn, I was sure burgers where purple, guess they're using green spraypaint, probably to look ecofriendly.\"",1,"Eco-Burgers")); //man you haven't heard about gay spraypaint (private joke)
-Game.menus[1].addbutton("Agree",2,0,0,0);
+Game.menus[1].addbutton("Agree",2);
 //Game.menus[1].addbutton("\"I THINK WHAT IF WE JUST KISS RIGHT NOW",2,0,0,0);
 
 Game.menus.push(new Game.Menu("Lenny proceeds to eat the burger. Don't you wanna eat your burger too?",1,"Lenny eats the burger"));
-Game.menus[2].addbutton("I wanna eat my burger please",3,0,0,0);
+Game.menus[2].addbutton("I wanna eat my burger please",3);
 
 Game.menus.push(new Game.Menu("Lenny:\"I miss when burgers looked like forks\"",1,"Fork Burgers"));
-Game.menus[3].addbutton("Agree",4,0,0,0);
+Game.menus[3].addbutton("Agree",4);
 
 Game.menus.push(new Game.Menu("Lenny:\"I think we should go\"",1,"We should go"));
-Game.menus[4].addbutton("I think we should go",5,0,0,0);
+Game.menus[4].addbutton("I think we should go",5);
 
 Game.menus.push(new Game.Menu("Both Lenny and you try walk out of the Hospital after eating the burgers but David Bowie blocks the way, He's about to sing his new song just for you.",2,"DAVID BOWIE??"));
-Game.menus[5].addbutton("Listen",6,0,0,0);
+Game.menus[5].addbutton("Listen",6);
 
 Game.menus.push(new Game.Menu("David Bowie:\"This is a new song i wrote just for you, it's called Let It Be\".<p>Backstage musicians start to play and David Bowie sings the first lines :<p>\"When I find myself in times of trouble<p>Mother Mary comes to me<p>Speaking words of wisdom\"",2,"David Bowie sings a little song"));
-Game.menus[6].addbutton("LET IT BE",7,0,0,0);
+Game.menus[6].addbutton("LET IT BE",7);
 
 Game.menus.push(new Game.Menu("David Bowie:\"That's my favorite song to play, i am glad you lads appreciate it.\"",2,"David Bowie is happy"));
-Game.menus[7].addbutton("David Bowie is my one and only lord",8,0,0,0);
+Game.menus[7].addbutton("David Bowie is my one and only lord",8);
 
 Game.menus.push(new Game.Menu("David Bowie:\"Why are you starting to scream, it's awful.\"<p> You notice uncontrollable sounds start to come out of your mouth.",2,"David Bowie judges you"));
-Game.menus[8].addbutton("Scream",9,0,0,0);
+Game.menus[8].addbutton("Scream",9);
 
 Game.menus.push(new Game.Menu("You continue to scream inhumane sounds",3,"Scream"));
-Game.menus[9].addbutton("Scream",10,0,0,0);
+Game.menus[9].addbutton("Scream",10);
 
 Game.menus.push(new Game.Menu("Please stop it now",3,"SCREAM"));
-Game.menus[10].addbutton("Scream",11,0,0,0);
+Game.menus[10].addbutton("Scream",11);
 
 Game.menus.push(new Game.Menu("WHY AREN'T YOU LISTENING TO ME!!!",3,"SCREAM!!"));
-Game.menus[11].addbutton("Scream",12,0,0,0);
-Game.menus[11].addbutton("Scream",12,0,0,0);
+Game.menus[11].addbutton("Scream",12);
+Game.menus[11].addbutton("Scream",12);
 
 Game.menus.push(new Game.Menu("",3,""));
-Game.menus[12].addbutton("Scream",13,0,0,0);
+Game.menus[12].addbutton("Scream",13);
 
 Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3,"DRRRR"));
-Game.menus[13].addbutton("Scream",14,0,0,0);
+Game.menus[13].addbutton("Scream",14);
 
 Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3,"DRRRRRRRRRR"));
-Game.menus[14].addbutton("Scream",15,0,0,0);
-Game.menus[14].addbutton("Scream",15,0,0,0);
-Game.menus[14].addbutton("Scream",15,0,0,0);
-Game.menus[14].addbutton("Scream",15,0,0,0);
-Game.menus[14].addbutton("Scream",59,0,0,0);
-Game.menus[14].addbutton("Scream",15,0,0,0);
+Game.menus[14].addbutton("Scream",15);
+Game.menus[14].addbutton("Scream",15);
+Game.menus[14].addbutton("Scream",15);
+Game.menus[14].addbutton("Scream",15);
+Game.menus[14].addbutton("Scream",59);
+Game.menus[14].addbutton("Scream",15);
 
-Game.menus.push(new Game.Menu("DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",3,"DRRRRRRRRRRRRRRRRR"));
-Game.menus[15].addbutton(" ",16,0,0,0);
+Game.menus.push(new Game.Menu("<h3>DRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR</h3>",3,"DRRRRRRRRRRRRRRRRR"));
+Game.menus[15].addbutton(" ",16);
 
 Game.menus.push(new Game.Menu("...",3,"..."));
-Game.menus[16].addbutton("Hmmm...",17,0,0,0);
+Game.menus[16].addbutton("Hmmm...",17);
 
 Game.menus.push(new Game.Menu("You start to gain back consciousness, you realise the sounds were actually coming from your neighbor using his fucking drill, you're pissed, but at least you somewhat got to see David Bowie.",4,"That was just a dream..."));
-Game.menus[17].addbutton("Fine...",18,0,0,0);
+Game.menus[17].addbutton("Fine...",18);
 
 
 
 //now i think the game will start to fork after waking up
 
 Game.menus.push(new Game.Menu("You remember how miserable you are laying on your bed, what do you want to do?",4,"Reality Hits"));
-Game.menus[18].addbutton("Try to get back to sleep",19,0,0,0);
-Game.menus[18].addbutton("Get out of bed",31,0,0,0);
+Game.menus[18].addbutton("Try to get back to sleep",19);
+Game.menus[18].addbutton("Get out of bed",31);
 
 Game.menus.push(new Game.Menu("You close your eyes, you put your head back onto your pillows and hide inside your sheets,if you pretend like you're sleeping, maybe that will get you back to sleep.",4,"Getting back to sleep..."));
-Game.menus[19].addbutton("I will pretend like I am sleeping",20,0,0,0);
+Game.menus[19].addbutton("I will pretend like I am sleeping",20);
 
 Game.menus.push(new Game.Menu("What a miserable pile of junk you are",4,"You are miserable"));
-Game.menus[20].addbutton("Shut up!",21,0,0,0);
+Game.menus[20].addbutton("Shut up!",21);
 
 Game.menus.push(new Game.Menu("You start to get warm and warmer, you're angry, utterly pissed and nervous. But OF COURSE you'll get back to sleep, it always happens like that. By the way the guy's still using his drill and it doesn't seem like he's about to stop any time soon",4,"OF COURSE you'll get back to sleep"));
-Game.menus[21].addbutton("Please stop",22,0,0,0);
+Game.menus[21].addbutton("Please stop",22);
 
 Game.menus.push(new Game.Menu("You proceed to give up, again, you're getting used to it and, I must say, pretty good at it",4,"Giving up"));
-Game.menus[22].addbutton("I will continue to give up",23,0,0,0);
-Game.menus[22].addbutton("Get out of bed",30,0,0,0);
+Game.menus[22].addbutton("I will continue to give up",23);
+Game.menus[22].addbutton("Get out of bed",30);
 
 Game.menus.push(new Game.Menu("You are a slug, a pile of meat and goo, you merely exist and you somehow managed to stay alive, you like to give up and will continue to stay still, that's your motto",4,"Personal motto"));
-Game.menus[23].addbutton("I am a slug, a pile of meat and goo, I merely exist and I somehow managed to stay alive, I like to give up and will continue to stay still, that's my motto",24,0,0,0);
-Game.menus[23].addbutton("Get out of bed...",30,0,0,0);
+Game.menus[23].addbutton("I am a slug, a pile of meat and goo, I merely exist and I somehow managed to stay alive, I like to give up and will continue to stay still, that's my motto",24);
+Game.menus[23].addbutton("Get out of bed...",30);
 
 Game.menus.push(new Game.Menu("You won't get out of bed won't you",4,"Stubborn"));
-Game.menus[24].addbutton("Let me sleep",25,0,0,0);
-Game.menus[24].addbutton("OK I'LL GET OUT",30,0,0,0);
+Game.menus[24].addbutton("Let me sleep",25);
+Game.menus[24].addbutton("OK I'LL GET OUT",30);
 
 Game.menus.push(new Game.Menu("You will NOT sleep, stop believing",4,"I Believe"));
-Game.menus[25].addbutton("Get out of bed like a true warrior",30,0,0,0);
-Game.menus[25].addbutton("Continue to believe in utter lies",26,0,0,0);
+Game.menus[25].addbutton("Get out of bed like a true warrior",30);
+Game.menus[25].addbutton("Continue to believe in utter lies",26);
 
 Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now get out of bed",4,"Never gonna give you up"));
-Game.menus[26].addbutton("No",27,0,0,0);
+Game.menus[26].addbutton("No",27);
 
 Game.menus.push(new Game.Menu("I won't let you until you get out of bed, now GET OUT OF BED",4,"Never gonna let you down"));
-Game.menus[27].addbutton("<h3>Get out of bed because it is the obvious smart choice</h3>",30,0,0,0);
-Game.menus[27].addbutton("No, I am a pile of shit",28,0,0,0);
+Game.menus[27].addbutton("<h3>Get out of bed because it is the obvious smart choice</h3>",30);
+Game.menus[27].addbutton("No, I am a pile of shit",28);
 
-Game.menus.push(new Game.Menu("Get out of bed",4,"All you need is a bit more determination"));
-Game.menus[28].addbutton("Ok i'll get out...",30,0,0,0);
-Game.menus[28].addbutton("No, I am miserable and useless",28,0,0,0);
+Game.menus.push(new Game.Menu("Get out of bed",4,"All you need is a bit more <b>determination</b>"));
+Game.menus[28].addbutton("Ok i'll get out...",30);
+Game.menus[28].addbutton("No, I am miserable and useless",28);
 //the player has to click a few times before getting the following end
-Game.menus.push(new Game.Menu("Well you know what, congrats, you win. You are indeed a winner, you somehow managed to get back to sleep for a few hours. You wake up at 5pm with a headache, neckpain and as many cramps as there are muscles in the human body, this is among the worst sleeps you ever had in your life, you're feeling completely dizzy and miserable. Are you happy now? <p> <h2>THE END</h2>",0,"Getting back to sleep ending",1));
-Game.menus[29].addbutton("Start over again",0,0,0,0);
+Game.menus.push(new Game.Menu("Well you know what, congrats, you win. You are indeed a winner, you somehow managed to get back to sleep for a few hours. You wake up at 5pm with a headache, neckpain and as many cramps as there are muscles in the human body, this is among the worst sleeps you ever had in your life, you're feeling completely dizzy and miserable. Are you happy now? <p> <h2>THE END</h2>",0,"Getting back to sleep ending",1,2));
+Game.menus[29].addbutton("Start over again",0);
 
 //got out of bed fork:
 
 Game.menus.push(new Game.Menu("Sir you've made the good choice",4,"UwU *bwushes*"));
-Game.menus[30].addbutton("Blush",31,0,0,0);
+Game.menus[30].addbutton("Blush",31);
 
 Game.menus.push(new Game.Menu("Neat, but now you realize one does not simply get out of bed",4,"No way"));
-Game.menus[31].addbutton("Oh..",32,0,0,0);
+Game.menus[31].addbutton("Oh..",32);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Getting out of bed"));
-Game.menus[32].addbutton("Lift right arm",33,0,0,0);
-Game.menus[32].addbutton("Get back to sleep like a coward",19,0,0,0);
+Game.menus[32].addbutton("Lift right arm",33);
+Game.menus[32].addbutton("Get back to sleep like a coward",19);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Right arm lifted"));
-Game.menus[33].addbutton("Lift left arm",34,0,0,0);
+Game.menus[33].addbutton("Lift left arm",34);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Left arm lifted"));
-Game.menus[34].addbutton("Lift Torso",35,0,0,0);
+Game.menus[34].addbutton("Lift Torso",35);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Torso lifted"));
-Game.menus[35].addbutton("Lift right leg",36,0,0,0);
+Game.menus[35].addbutton("Lift right leg",36);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Right leg lifted"));
-Game.menus[36].addbutton("Lift left leg",37,0,0,0);
+Game.menus[36].addbutton("Lift left leg",37);
 
 Game.menus.push(new Game.Menu("What are you gonna do now?",4,"Left leg lifted"));
-Game.menus[37].addbutton("Stand up",38,0,0,0);
+Game.menus[37].addbutton("Stand up",38);
 
 Game.menus.push(new Game.Menu("Wow that was a tedious process, but you've done it!",0,"If only we just had to press buttons"));
-Game.menus[38].addbutton("Phew",39,0,0,0);
+Game.menus[38].addbutton("Phew",39);
 //congrats now you got out of bed, let's see what's next
 
 Game.menus.push(new Game.Menu("You're now standing up, feeling dizzy, as usual. You feel like the day is already wasted and you are right",0,"Stand up"));
-Game.menus[39].addbutton("Complain",40,0,0,0);
+Game.menus[39].addbutton("Complain",40);
 
 Game.menus.push(new Game.Menu("Of course the logical thing to do is to complain, right. Always fixed the issue",0,"I can't complain"));
-Game.menus[40].addbutton("You're getting on my nerves",41,0,0,0);
+Game.menus[40].addbutton("You're getting on my nerves",41);
 
 Game.menus.push(new Game.Menu("Haha I'm teasing you",0,"Teaser"));
-Game.menus[41].addbutton("Man purposely limited my answers, what an ass",42,0,0,0);
+Game.menus[41].addbutton("Man purposely limited my answers, what an ass",42);
 
 Game.menus.push(new Game.Menu("It is morning, you can hear the birds chirping to death due to pollution, the sound of trafic, as well as the sound of your neighbor's drill. You feel like you need to pee, what are you gonna do.",5,"Beautiful Day"));
-Game.menus[42].addbutton("Let's pee",43,0,0,0);   //the trick is that one of these buttons is gonna change a variable which will have consequences in the future
-Game.menus[42].addbutton("Real men don't pee",51,0,0,0);
+Game.menus[42].addbutton("Let's pee",43);   //the trick is that one of these buttons is gonna change a variable which will have consequences in the future
+Game.menus[42].addbutton("Real men don't pee",51);
 
 Game.menus.push(new Game.Menu("You open the bathroom door, and delicately place your butt on the toilet seat",5,"Throne"));
-Game.menus[43].addbutton("Pee",44,0,0,0);
+Game.menus[43].addbutton("Pee",44);
 
 Game.menus.push(new Game.Menu("The delicate sound of urine can be heard",5,"The sound of piss"));
-Game.menus[44].addbutton("Pee",45,0,0,0);
+Game.menus[44].addbutton("Pee",45);
 
 Game.menus.push(new Game.Menu("Hmmm this feels good, right?",5,"I feel good"));
-Game.menus[45].addbutton("Oh yeah man (LET IT PEE)",46,0,0,0);
+Game.menus[45].addbutton("Oh yeah man (LET IT PEE)",46);
 
 Game.menus.push(new Game.Menu("Looks like you're almost done",5,"Getting things done"));
-Game.menus[46].addbutton("Wiggle",47,0,0,0);
+Game.menus[46].addbutton("Wiggle",47);
 
 Game.menus.push(new Game.Menu("The final drop of pee has come out, you are now done, doesn't this feel nice?",5,"Dropped the piss"));
-Game.menus[47].addbutton("Oh yeah man (Put panties back)",48,0,0,0);
+Game.menus[47].addbutton("Oh yeah man (Put panties back)",48);
 
 Game.menus.push(new Game.Menu("Neat",0,"After piss"));
-Game.menus[48].addbutton("Wash your hands",49,0,0,0);
-Game.menus[48].addbutton("Don't wash your hands",50,0,0,0); //this will probably do some funny stuff in the future
+Game.menus[48].addbutton("Wash your hands",49);
+Game.menus[48].addbutton("Don't wash your hands",50); //this will probably do some funny stuff in the future
 
 Game.menus.push(new Game.Menu("You proceed to wash your hands, now they feel fresh, clean and soft",6,"You make me feel like I am clean again"));
-Game.menus[49].addbutton("Get back to bedroom",51,0,0,0);
+Game.menus[49].addbutton("Get back to bedroom",51);
 
 Game.menus.push(new Game.Menu("Disgusting",0,"Disgusting"));
-Game.menus[50].addbutton("Get back to bedroom",51,0,0,0);
+Game.menus[50].addbutton("Get back to bedroom",51);
 
 Game.menus.push(new Game.Menu("You now wonder what you are gonna do with your day",4,"Bedroom Menu"));
-Game.menus[51].addbutton("Get back to sleep",52,0,0,0);
-Game.menus[51].addbutton("Touch grass",53,0,0,0);
-Game.menus[51].addbutton("Turn on computer",54,0,0,0);
+Game.menus[51].addbutton("Get back to sleep",52);
+Game.menus[51].addbutton("Touch grass",53);
+Game.menus[51].addbutton("Turn on computer",54);
 
 Game.menus.push(new Game.Menu("Are you serious?",0,"Are you serious?"));
-Game.menus[52].addbutton("Nah, joking",51,0,0,0);
-Game.menus[52].addbutton("Yeah",18,0,0,0);
+Game.menus[52].addbutton("Nah, joking",51);
+Game.menus[52].addbutton("Yeah",18);
 
-Game.menus.push(new Game.Menu("Hell no you can't do that yet. this is a<p><h2>WORK IN PROGRESS</h2> baby",0,"(You can suggest me idea on my <a href=\"https://usagik.tumblr.com\">Tumblr</a>)"));
-Game.menus[53].addbutton("Oh...",51,0,0,0);
+Game.menus.push(new Game.Menu("Hell no you can't do that yet. this is a<p><h2>WORK IN PROGRESS</h2> baby",0,"(You can suggest me idea on my <a href=\"https://usagik.tumblr.com\" target=\"_blank\">Tumblr</a>)"));
+Game.menus[53].addbutton("Oh...",51);
 
 Game.menus.push(new Game.Menu("You turn on your computer, but Windows needs to update",7,"OK Computer"));
-Game.menus[54].addbutton("Fuck",55,0,0,0);
+Game.menus[54].addbutton("Fuck",55);
 
 Game.menus.push(new Game.Menu("Many moments later your computer has finally fully booted, what do you want to do?",7,"Computer menu"));
-Game.menus[55].addbutton("Play Cookie Clicker",56,0,0,0);
-Game.menus[55].addbutton("Play Minecraft",57,0,0,0);
-Game.menus[55].addbutton("Turn the computer off and leave",51,0,0,0);
+Game.menus[55].addbutton("Play Cookie Clicker",56);
+Game.menus[55].addbutton("Play Minecraft",57);
+Game.menus[55].addbutton("Turn the computer off and leave",51);
 
 
 //cookie clicker BOYS
-Game.menus.push(new Game.Menu("",0,"Cookie Clicker",1));
+Game.menus.push(new Game.Menu("",0,"Cookie Clicker",1,3));
 
 
 // MINECRAFT (notch would be proud)
-Game.menus.push(new Game.Menu("",0,"Minecraft",1));
+Game.menus.push(new Game.Menu("",0,"Minecraft",1,4));
 
 
 //funny number ending
-Game.menus.push(new Game.Menu("Thanks to your dedication and your rather quite elaborate sense of humor, you managed to find this secret ending. Consider your hard work rewarded. Congratulation. <p> <h2>THE END</h2>",0,"Funny Number ending",1));
-Game.menus[58].addbutton("Start over again",0,0,0,0);
+Game.menus.push(new Game.Menu("Thanks to your dedication and your rather quite elaborate sense of humor, you managed to find this secret ending. Consider your hard work rewarded. Congratulation. <p> <h2>THE END</h2>",0,"Funny Number ending",1,2));
+Game.menus[58].addbutton("Start over again",0);
 
 
 //discord
 
-Game.menus.push(new Game.Menu("",0,"Discord",1));
+Game.menus.push(new Game.Menu("",0,"Discord",1,5));
 
 
 Game.refresh() //begin the begin
@@ -741,45 +759,77 @@ Game.refresh() //begin the begin
 <style>
 
 html{
-	overflow:hidden;
+	overflow-x:hidden;
+	font-family:"Times New Roman";
 }
 
-#game{
-	margin:auto;
+
+
+#page{
+	text-align:center;
 	margin-top:10%;
+}
+
+
+
+
+
+#game{
+	margin-right:10px;
+	margin-left:10px;
+	display: inline-block;
+	background-color:white;
+	position:relative;
+	overflow:hidden;  /*makes me a bit sad, i had a tiny effect that looked good with overflow but if i let it be it's breaking the website (i'll find a workaround someday)*/
 	border:1px solid black;
 	width:400px;
-	height:270px;
+	height:300px;
 	text-align:center;
-	padding-top:30px;
+	
 	}
+	
+	
 
 #pagemap{
+	display: inline-block;
+	background-color:white;
+	position:relative;
 	overflow:scroll;
-	float:right;
-	margin:auto;
 	border:1px solid black;
 	width:200px;
 	height:300px;
-	margin-right:23%;
 	text-align:center;
 	}
 
 #updatelog{
+	display: inline-block;
+	background-color:white;
+	position:relative;
 	font-size:12px;
 	overflow:scroll;
-	float:left;
-	margin:auto;
 	border:1px solid black;
 	width:200px;
 	height:300px;
-	margin-left:23%;
 	text-align:left;
 	}
 
+#credits{
+	font-size:13px;
+	background-color:white;
+	position:relative;
+	border:1px solid black;
+	width:400px;
+	height:40px;
+	text-align:center;
+	margin:auto;
+	margin-top:10px;
+	
+	}
+	
 #mapbutton{
 	margin:auto;
 	border:1px solid black;
+	position:relative;
 	width:auto;
 	height:14px;
 	font-size:11px;
@@ -791,14 +841,6 @@ html{
 	padding-bottom:3px;
 	}
 
-#credits{
-	margin:auto;
-	border:1px solid black;
-	width:400px;
-	height:40px;
-	text-align:center;
-	margin-top:30px;
-	}
 
 #cookie:active{
 	background-position:-64px;
@@ -811,6 +853,19 @@ html{
 	cursor:pointer;
 	text-shadow: 0 0 4px black; /*why won't this work */
 }
+
+/*booh booh booh imagine being a phone user (this game is not meant to be played on mobile but here we go anyway)*/
+
+@media only screen and (max-width: 700px){
+	
+	#updatelog{
+	width:400px;
+	height:100px;
+
+	}
+
+} 
+	
 
 </style>
 </html>
