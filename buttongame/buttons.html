@@ -5,11 +5,19 @@
 <meta content="https://usagik.github.io/UsagiK-Games/buttongame/buttons.html" property="og:url" />
 <meta content="#9900cc" name="theme-color" /></head>
 <!--Heyo-->
-<body>
+<body><div id="fake"></div>
 <div id="page">
 
 <div id="updatelog">
 <div style="background-color:white; margin-left:6px; position:sticky;top:0;">Update log:</div>
+  
+<div style="margin-left:6px;">(7/31/2023) V6:</div>
+<ul>
+<li>Added a rudimentary save system that certainly is gonna need some reworking, all save created in this version are not guaranteed to work forever, will hold on for the next few updates adding more content.</li>
+<li>Advertising is now a thing here.</li>
+<li>Probably a few fixes too</li>
+<li>(No new content (again))</li>
+</ul>
 
 <div style="margin-left:6px;">(7/30/2023) V5:</div>
 <ul>
@@ -46,11 +54,12 @@
 </ul>
 </div>
 
-<div id="game">This game requires Javascript</div>
+<div id="game">Your Javascript either is disabled or completely outdated or this game is VERY VERY poorly coded</div>
 <div id="pagemap">pages</div>
-<div id="credits">This game was made by UsagiK (check out my <a href="https://usagik.tumblr.com" target="_blank">Tumblr</a>!!). 2023 | V5</div>
+<div id="credits">This game was made by UsagiK (check out my <a href="https://usagik.tumblr.com" target="_blank">Tumblr</a>!!). 2023 | V6 <button id="removeads">THIS IS NOT WORKING FINE</button><button onclick="Game.export()">Export save</button><button onclick="Game.import()">Import save</button></div>
 
 </div>
+
 </body>
 
 <script>
@@ -87,7 +96,8 @@ Update Log:
 (7/27/2023) V2: Continued the get out of bed "storyline" and added more succulent jokes (and pretty drawings made with the mouse)
 (7/28/2023) V3: Added Cookie Clicker, Minecraft and a secret ending
 (7/29/2023) V4: Introducing the new page map, makes it easier to wonder and play around. Added a few Cookie Clicker news text, Added Discord as a secret before adding all the features I want to make (hint: scream), little fixes
-(7/30/2023) V5:Added little icons on the page map. Game should be playable on mobile now. Other Minor fixes
+(7/30/2023) V5: Added little icons on the page map. Game should be playable on mobile now. Other Minor fixes
+(7/31/2023) V6: Added a rudimentary save system that certainly is gonna need some reworking, all save created in this version are not guaranteed to work forever, will hold on for the next few updates adding more content. Advertising is now a thing here. Probably a few fixes
 
 https://usagik.github.io/UsagiK-Games/buttongame/buttons.html 2023
 https://usagik.tumblr.com (<-- check out my tumblr!!)
@@ -122,21 +132,58 @@ Game.tick=0;
 Game.menus=[];
 Game.div=document.getElementById("game");
 Game.unlocked=[];
-Game.version=5;
-
-news= "";
-
-//these are for future funnies 
+Game.version=6;
+Game.soul=1;
+Game.naked=1; //no additional context (spoiler it's actually just variables needed for future storylines and i'm too lazy to code a proper save system so i'm adding them now, at least you'll be able to use your save for the next few updates
+Game.started=new Date().getTime();
+Game.startVersion=6;
 Game.piss=0;
 Game.nowash=0;
 
+Game.showad=1;
+Game.adlist=[["('img/gay.gif')","https://en.wikipedia.org/wiki/Gay_agenda"],["('img/death.gif')","https://www.youtube.com/watch?v=SVlAZhaugRs"],["(img/cigarettes.gif)","https://en.wikipedia.org/wiki/Edward_Bernays"],["('img/cookieclicker.gif')","https://orteil.dashnet.org/cookieclicker/"],["('img/adblock.gif')","https://www.youtube.com/watch?v=BQbPjPi3RjA"],["('img/firefox.gif')","https://contrachrome.com/"]];
+Game.currentad=Math.floor(Math.random()*Game.adlist.length);
+
+news= "";
+
+
+
+
+Game.ad=function(){ //would be ironic if this was flagged as a real ad
+
+	
+	
+	//ngl this is a tiny bit messy way BUT it still works as an on/off switch
+	//what i mean is that the Game.showad value has to be initialized to 0 to SHOW the ad
+	//this doesn't have to be perfect at all actually, it's just parodying so WHO CARES
+	//as i modified the code all of that is no longer relevent, but i'm keeping it here to confuse the archaeologists from the future, hi
+	
+	if(Game.showad==1){
+
+		document.getElementById("fake").innerHTML="advertisement<a href='"+Game.adlist[Game.currentad][1]+"' target='_blank'><div id='ad'></div></a>";
+		document.getElementById("ad").setAttribute("style","background-image: url"+Game.adlist[Game.currentad][0]);
+		document.getElementById("removeads").innerHTML="Remove ad";
+		document.getElementById("removeads").setAttribute("onclick","Game.showad=0; Game.ad();");
+	}
+	else{
+
+		document.getElementById("fake").innerHTML="";
+		document.getElementById("removeads").innerHTML="Show ad";
+		document.getElementById("removeads").setAttribute("onclick","Game.showad=1; Game.ad();");
+	}
+	
+}
 
 Game.refresh=function(){
 
-	//refresh HTML
+	//refresh HTML (actually it just refreshes content inside the game div, so if you start to delete elements you're gonna break everything, please don't)
+	
 	Game.div.innerHTML="<div style='margin:6px; margin-top:30px'>"+Game.menus[Game.page].text+"</div>";
 	button=document.createElement("button");
 	Game.div.style.backgroundImage="url('img/BG.png')";
+	
+	
+	Game.ad();
 	
 	
 	
@@ -268,7 +315,6 @@ Game.buttonclick=function(menuid,buttonid){
 		
 		Game.page=thatbutton.menugoto;
 		Game.tick+=1;
-		Game.evil+=thatbutton.addevil;
 		//document.getElementById("pagemap").scrollTop = Game.page*14; i wanted to make so it automatically focuses (scroll) to current page in the page map, i completely failed the task
 		document.getElementById("pagemap").scrollTop = 10000000; //bruh
 			
@@ -358,15 +404,15 @@ Cookie.ticker=function(){
 		Cookie.list.push(choose(["Don't feed your parrot cookies","Pandas are a great source of food","\"The earth is round!!!\" says Minecraft complotist"]));
 	}
 	
-	if(Cookie.cookies>50 && Math.random()>0.5){
-		Cookie.list.push(choose(["\"There are 10 types of people, those who understand binary and those who don't\" says obnoxious nerd who thinks he's funny, SHUT UP","Put on your red shoes and dance the blues","\"I thought i was a fool for no one<p>But oooh baby I'm a fool for you\" says simp","Je ne t'abandonnerai jamais, je ne te laisserai jamais tomber"]));
+	if(Cookie.cookies>50 && Math.random()>0.7){
+		Cookie.list.push(choose(["\"There are 10 types of people, those who understand binary and those who don't\" says obnoxious nerd who thinks he's funny, SHUT UP","Put on your red shoes and dance the blues","\"I thought i was a fool for no one<p>But oooh baby I'm a fool for you\" says simp","Je ne t'abandonnerai jamais, je ne te laisserai jamais tomber","Note, this game is NOT a safe space"]));
 	}
 	
-	if(Cookie.cookies>100 && Math.random()>0.5){
+	if(Cookie.cookies>100 && Math.random()>0.7){
 		Cookie.list.push(choose(["Why are you still clicking","Farts","I don't care if Monday's blue, Tuesday's gray and Wednesday too. Thursday I don't care about you. It's Friday I'm in love!","Mom found some X app on her son's phone, thanks Elon"]));
 	}
 	
-	if(Cookie.cookies>500 && Math.random()>0.5){
+	if(Cookie.cookies>500 && Math.random()>0.7){
 		Cookie.list.push(choose(["Why? WHYYYY???? You're destroying yourself, stop!!!","Remember, there are people denying the right for a person to live","<div style='margin:auto;width:16px;height:16px;background-image:url(\"img/amog.png\")'></div>"]));
 	}
 	
@@ -387,6 +433,12 @@ Cookie.ticker=function(){
 	}
 	
 	document.getElementById("ticker").innerHTML=choose(Cookie.list);
+	
+	
+	if(Cookie.cookies>999999){  //for someone who almost got to 1million cookies with an autoclicker
+		Cookie.list.push(choose(["Charlie, are you satisfied now?"]));
+	}
+	
 	
 	
 }
@@ -504,6 +556,126 @@ Discord.messages.push(new Discord.Message("I've been feeling dead, as usual...",
 Discord.messages.push(new Discord.Message("oh","lenny",1));
 Discord.messages.push(new Discord.Message("OH NOOO!!! hope you get better soon!! <i>hugs</i>","Luwudwig",2));
 Discord.messages.push(new Discord.Message("","Luwudwig",2,"boy.gif"));
+
+
+
+//SAVING
+
+//this is very clumsy and NOT future proof at all, buy hey, it does the job
+//i am sorry father
+
+
+//also my keyboard started to glitch out while doing this so i went VERY VERY MAD, thanks windows 11
+
+Game.save=function(){
+
+	Game.savestring="BUTTONS|"
+	Game.savestring+=Game.version+"|";
+	Game.savestring+=Game.startVersion+"|";
+	Game.savestring+=Game.started+"|";
+	Game.savestring+=Game.showad+"|";
+	Game.savestring+=Game.evil+"|";
+	Game.savestring+=Game.tick+"|";
+	Game.savestring+=Game.piss+"|";
+	Game.savestring+=Game.nowash+"|";
+	Game.savestring+=Game.soul+"|";
+	Game.savestring+=Game.naked+"|";
+	Game.savestring+=Cookie.cookies+"|";
+	Game.savestring+=Minecraft.mines+"|";
+	Game.savestring+=Minecraft.crafts+"|";
+	Game.savestring+=Game.unlocked+"|";
+	Game.savestring+="Never gonna give you up|";
+	//Game.savestring+=Discord.messages+"|";
+	
+	return window.btoa(Game.savestring); //sorry people who use +10 year old browser lol
+
+}
+
+Game.load=function(str){
+	
+	if(str==null){
+		return false;
+	}
+	Game.loadstring=window.atob(str)
+	a=""
+	b=[];
+	
+	for (i=0;i<Game.loadstring.length;i++){
+		if(Game.loadstring[i]!=="|"){
+			a+=Game.loadstring[i];
+			
+			}
+		else{
+			b.push(a);
+			a="";
+		}
+}
+
+
+	
+	if(b[0]=="BUTTONS" && b.length>=15){
+		
+		
+		if(!(b[1]>Game.version)){ //just checking if the save doesn't come from a more recent version
+
+			Game.page=0;
+	
+	
+			Game.startVersion=Number(b[2]);
+			Game.started=Number(b[3]);
+			Game.showad=Number(b[4]);
+			Game.evil=Number(b[5]);
+			Game.tick=Number(b[6]);
+			Game.piss=Number(b[7]);
+			Game.nowash=Number(b[8]);
+			Game.soul=Number(b[9]);
+			Game.naked=Number(b[10]);
+			Cookie.cookies=Number(b[11]);
+			Minecraft.mines=Number(b[12]);
+			Minecraft.crafts=Number(b[13]);
+	
+			//importing array of unlocked pages
+			Game.unlocked=b[14].split(',');
+			for (i=0;i<Game.unlocked.length;i++){
+				Game.unlocked[i]=Number(Game.unlocked[i]);
+	
+			}
+	
+	
+			Game.refresh();
+			return true;
+		}
+		
+		else{
+			window.alert("You thought you could just put in a save from a newer version of the game like that? Well I CAN SEE IT YOU KNOW!");
+			return false;
+			
+		}
+	
+		}
+	
+	
+	
+		else{
+			window.alert("Dude, your save is completely messed up, just like you");
+			return false;
+		}
+	
+	}
+//i am losing my religion :pensive:
+	
+Game.export=function(){
+	prompt("Here we go, this is your save. Make sure to put it somewhere safe.\nI really have to tell you like a child because you are unable to think on your own :",Game.save());
+}
+
+Game.import=function(){
+	Game.load(prompt("Put in your save, and DON'T TRY TO CHEAT, I would immediately see it.", ));
+
+
+}
+
+
+
 
 
 
@@ -749,7 +921,7 @@ Game.menus.push(new Game.Menu("",0,"Discord",1,5));
 
 
 Game.refresh() //begin the begin
-
+Game.ad() //troll emoji
 
 
 //orteil would be proud
@@ -767,7 +939,7 @@ html{
 
 #page{
 	text-align:center;
-	margin-top:10%;
+	
 }
 
 
@@ -824,6 +996,22 @@ html{
 	margin:auto;
 	margin-top:10px;
 	
+	}
+
+#fake{
+	width:400px;
+	height:170px;
+	text-align:center;
+	margin:auto;
+	}
+#ad{
+	background-color:white;
+	position:relative;
+	border:1px solid black;
+	width:400px;
+	height:120px;
+	text-align:center;
+	margin:auto;
 	}
 	
 #mapbutton{
