@@ -3,20 +3,20 @@
 <body>
 <div style="text-align:center">
 <canvas id="game" width="100" height="100" >POV: YOU USE AN ANCIENT BROWSER</canvas>
-<div style="font-size:13px; color:red;">Note: When it crashes (and it will crash) you'd have to reset the grid, sorry I haven't found another way yet</div>
+<div style="font-size:13px; color:red;">Note: if it crashes you'd have to reset the grid, sorry I haven't found another way yet</div>
+<div style="font-size:13px; color:green;">Note: Now this actually runs way smoother, enjoy</div>
 <div id="info" style="border:1px solid black; margin:auto;width:200px;"></div>
 <p><button onclick="Game.running=0">Pause</button><button onclick="Game.running=1">Resume</button><button onclick="Game.init()">Reset</button><button onclick="Game.init();Game.generategrid(1)">Empty grid</button>
-<p>Select a material: <button onclick="Game.selector[0]=0">Air</button><button onclick="Game.selector[0]=1">Sand</button><button onclick="Game.selector[0]=2">Water</button><button onclick="Game.selector[0]=3">Stone</button>
+<p>Select a material: <button onclick="Game.selector[0]=0">Air</button><button onclick="Game.selector[0]=1">Sand</button><button onclick="Game.selector[0]=2">Water</button><button onclick="Game.selector[0]=3">Stone</button><button onclick="Game.selector[0]=4">Dirt</button><button onclick="Game.selector[0]=5">Super fluid</button>
 <div id="credits">This experiment was made by <a href="https://usagik.tumblr.com" target="_blank">UsagiK</a> (check out <a href="https://usagik.github.io/UsagiK-Games/buttongame/buttons.html" target="_blank">my other game</a>!!). 2023<div style="color:red;">Note: This is a VERY BUGGY experiment, feel free to <b><a href="https://www.tumblr.com/new/ask/usagik" target="_blank">critisize my code</a><b></div></div>
 </div>
 </body>
 
 <script>
 
-//THIS IS HIGHLY INEFFICIENT PLEASE KILL ME
-
 //some names may sound weird but it's because i wanted to add more features i can't implement
 
+//i accidentally saved this in jsfiddle and can't delete it jajajaggggrrrr
 
 canvas = document.getElementById("game");
 ctx = canvas.getContext("2d");
@@ -32,17 +32,19 @@ Game={}
 Game.init=function(){
 	Game.selector=[1]; //more stuff coming
 	Game.materials=[]
-	Game.fps=60; //hell no
+	Game.fps=60; //hell yeah now it works
 	Game.running=1;
 	Game.grid=[]
 	Game.secret=0; //LOL
 	mousePos=0;
 	mouseDown=false;
 	
-	Game.materials.push(new Game.Material("Air",0,0,"#000000",0));
-	Game.materials.push(new Game.Material("Sand",1,1,"#fafa80",0.5));
-	Game.materials.push(new Game.Material("Water",1,1,"#0066ff",0.2));
-	Game.materials.push(new Game.Material("Stone",1,0,"#808080",1));
+	Game.materials.push(new Game.Material("Air",0,0,"#000000",0,0));
+	Game.materials.push(new Game.Material("Sand",1,1,"#fafa80",0.995,1));
+	Game.materials.push(new Game.Material("Water",1,1,"#0066ff",0.5,1));
+	Game.materials.push(new Game.Material("Stone",1,0,"#808080",1,0));
+	Game.materials.push(new Game.Material("Dirt",1,1,"#804000",0.995,0));
+	Game.materials.push(new Game.Material("Super liquid",1,1,"#99ccff",0,1));
 	
 	Game.generategrid(0);
 	Game.loop()
@@ -50,22 +52,23 @@ Game.init=function(){
 	
 }
 
-Game.Material=function(name,collision,gravity,color,viscosity){
+Game.Material=function(name,collision,gravity,color,viscosity,liquid){
 	this.name=name;
 	this.collision=collision;
 	this.gravity=gravity;
 	this.color=color;
 	this.viscosity=viscosity;
+	this.liquid=liquid
 }
 
 
-Game.generategrid=function(empty){
+Game.generategrid=function(empty){ //you won't believe how much faster it is now that i don't nest arrays inside the main array
 	Game.grid=[]
 	for(y=0;y<height;y++){
-		Game.grid.push([])
+		//Game.grid.push([])
 		for(x=0;x<width;x++){
-			if(empty==1){Game.grid[y].push(0);}
-			else{Game.grid[y].push(Math.floor(Math.random()*2.3))}
+			if(empty==1){Game.grid.push(0);}
+			else{Game.grid.push(Math.floor(Math.random()*2.3))}
 		}
 	}
 }
@@ -96,18 +99,13 @@ canvas.addEventListener('mouseup',function(){mouseDown=false}, 0);
 //let's make a game
 Game.draw=function(){
 
-	if(Game.secret==1){  //this was WAY TOO tempting
-	Game.materials[2].color="#ffcc33";
-	}
-	else{
-	Game.materials[2].color="#0066ff";
-	}
+	
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	for(y=0;y<height-1;y++){
-		for(x=0;x<width;x++){
-			a=Game.grid[y][x];
-			ctx.fillStyle=Game.materials[Game.grid[y][x]].color;
+	for(y=0;y<100;y++){
+		for(x=0;x<100;x++){
+			a=Game.grid[(100*y)+x];
+			ctx.fillStyle=Game.materials[Game.grid[(100*y)+x]].color;
 			
 			ctx.fillRect(x, y, 1, 1);
 		}
@@ -116,67 +114,74 @@ Game.draw=function(){
 	//info
 	document.getElementById("info").innerHTML="x :"+mousePos.x+" y: "+mousePos.y+"<p>is mouse mouse down? "+(function(){if(mouseDown){return "yep"}else{return "nope"} })()+"<p> Selected material: "+(Game.materials[Game.selector[0]].name);
 }
+
 Game.placepixel=function(){
-	Game.grid[mousePos.y][mousePos.x]=Game.selector[0];
+	Game.grid[(100*mousePos.y)+mousePos.x]=Game.selector[0];
 }
 
 Game.refreshgrid=function(){
 
-	for(y=height-2;y>-1;y--){
-		for(x=0;x<width-1;x++){
-			pixel=[Game.grid[y][x]];
-			if(typeof(Game.grid[y+1][x]) != "undefined"){upixel=[Game.grid[y+1][x]];}
-			if(typeof(Game.grid[y][x-1]) != "undefined"){lpixel=[Game.grid[y][x-1]];}
-			if(typeof(Game.grid[y][x+1]) != "undefined"){rpixel=[Game.grid[y][x+1]];}
+	for(y=99;y>-1;y--){
+		for(x=0;x<100;x++){
+		
+		
+			pixel=Game.grid[(100*y)+x];
+			
+			if(pixel>0){
+			upixel=Game.grid[(100*(y+1))+x];
+			lpixel=Game.grid[(100*y)+(x-1)];
+			rpixel=Game.grid[(100*y)+(x+1)];
 			
 			//I'M SO SORRY OOOOHHOOOOO
 		
-			if(Game.materials[pixel].name=="Water"){
-					if(Game.materials[upixel].name=="Air"){
-						Game.grid[y][x]=upixel;
-						Game.grid[y+1][x]=pixel;
+		  if(Math.random()>Game.materials[pixel].viscosity && Game.materials[pixel].liquid==1){
+		  
+					if(upixel==0){
+						Game.grid[(100*y)+x]=upixel;
+						Game.grid[(100*(y+1))+x]=pixel;
 					}
-					else if(Game.materials[lpixel].name=="Air" && Game.materials[rpixel].name=="Air"){
+					else if(rpixel==0 && lpixel==0){
 						if(Math.random()>0.5){
-							Game.grid[y][x]=rpixel;
-							Game.grid[y][x+1]=pixel;
-							if(Game.materials[pixel].name=="Air"){
-							Game.grid[y][x+1]=upixel;
-							Game.grid[y+1][x+1]=pixel;}
+							Game.grid[(100*y)+x]=rpixel;
+							Game.grid[(100*y)+(x+1)]=pixel;
+							if(pixel==0){
+							Game.grid[(100*y)+(x+1)]=upixel;
+							Game.grid[(100*(y+1))+(x+1)]=pixel;}
 						}
 						else{
-							Game.grid[y][x]=lpixel;
-							Game.grid[y][x-1]=pixel;
-							if(Game.materials[pixel].name=="Air"){
-							Game.grid[y][x-1]=upixel;
-							Game.grid[y+1][x-1]=pixel;}
+						  Game.grid[(100*y)+x]=lpixel;
+							Game.grid[(100*y)+(x-1)]=pixel;
+							if(pixel==1){
+							Game.grid[(100*y)+(x-1)]=upixel;
+							Game.grid[(100*(y+1))+(x-1)]=pixel;}
 						}
 					}
-					else if(Game.materials[lpixel].name=="Air"){
-						Game.grid[y][x]=lpixel;
-						Game.grid[y][x-1]=pixel;
-						if(Game.materials[pixel].name=="Air"){
-						Game.grid[y][x-1]=upixel;
-						Game.grid[y+1][x-1]=pixel;}
+					else if(lpixel==0){
+						Game.grid[(100*y)+x]=lpixel;
+						Game.grid[(100*y)+(x-1)]=pixel;
+						if(pixel==0){
+						Game.grid[(100*y)+(x-1)]=upixel;
+						Game.grid[(100*y)+(x-1)]=pixel;}
 					
 					}
-					else if(Game.materials[rpixel].name=="Air"){
-						Game.grid[y][x]=rpixel;
-						Game.grid[y][x+1]=pixel;
-						if(Game.materials[pixel].name=="Air"){
-						Game.grid[y][x+1]=upixel;
-						Game.grid[y+1][x+1]=pixel;}
+					else if(rpixel==0){
+						Game.grid[(100*y)+x]=rpixel;
+						Game.grid[(100*y)+(x+1)]=pixel;
+						if(pixel==0){
+						Game.grid[(100*y)+(x+1)]=upixel;
+						Game.grid[(100*y)+(x+1)]=pixel;}
 					}
 				}
 			
 			else if(Game.materials[pixel].gravity==1 && Game.materials[pixel].viscosity>Game.materials[upixel].viscosity){
 				
-					Game.grid[y][x]=upixel;
-					Game.grid[y+1][x]=pixel;
+					Game.grid[(100*y)+x]=upixel;
+					Game.grid[(100*(y+1))+x]=pixel;
 
 			}
 			
 			
+		}
 		}
 	}
 }
@@ -196,6 +201,14 @@ Game.logic=function(){
 }
 
 Game.loop=function(){
+
+	if(Game.secret==1){  //this was WAY TOO tempting
+	Game.materials[2].color="#ffcc33";
+	}
+	else{
+	Game.materials[2].color="#0066ff";
+	}
+	
 	Game.logic();
 	Game.draw();
 	setTimeout(Game.loop,1000/Game.fps);  //"Uncaught InternalError: too much recursion" rage
@@ -203,6 +216,7 @@ Game.loop=function(){
 
 
 Game.init(); //initialize the demonic ritual
+
 
 
 
@@ -220,7 +234,6 @@ Game.init(); //initialize the demonic ritual
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -o-crisp-edges;           
     image-rendering: crisp-edges;               
-    -ms-interpolation-mode: nearest-neighbor;
 }
 
 #credits{
