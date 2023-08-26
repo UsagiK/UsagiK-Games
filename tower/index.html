@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+<div style="text-align:center;">
+<canvas id="game" height="900" width="700"></canvas><div id="score" style="font-size:32px">JAmVASCRIPRI¨Z</div>
+</div>
+</body>
+<script>
+
+//welcome to probably one of the worst javascript code you'll ever see in your life
+//well yknow what now? you're NOT WELCOME
+
+
+//NOTE!: usagik wanted to make it at least playable before releasing it to the public (at least those who have the link) but he said fuck it
+//have "fun"
+
+//this game is broken and actually broke in 3 pieces, making it 3 games at the same time
+//the first game is to try to guess what game this was supposed to be
+//the second game is to try to understand what THE FUCK IT IS DOING
+//the third game is just to score many points (my BP is 16 points)
+
+canvas = document.getElementById("game");
+ctx = canvas.getContext("2d");
+height=canvas.height;
+width=canvas.width;
+
+random=function(a,b){
+  return Math.floor(Math.random()*(b+1-a)+a)
+}
+
+function choose(arr) {return arr[Math.floor(Math.random()*arr.length)];} //~~stolen~~ borrowed function from cookie clicker
+
+Game={}
+
+Game.init=function(){
+
+//do not try to understand the variables, they will drive you insane (this is a message to my future self)
+Game.list=[];
+Game.currentlength=14;
+Game.cam=[0,0];
+Game.chunk=32;
+Game.speed=0.2;
+Game.Dcam=[0,0]
+Game.fps=60;
+Game.lose=1;
+}
+Game.best=0;
+Game.init()	//this sounds british
+
+document.addEventListener("keydown",function(event){
+
+//shitty cam debug
+//twas to test if at least i got the camera thing right, which is good because it's the only thing that works (i think)
+if (event.keyCode==37){console.log("LEFT ARROW KEY!!");Game.cam[0]-=32;}
+else if (event.keyCode==38){console.log("UP ARROW KEY!!");Game.cam[1]+=32;}
+else if (event.keyCode==39){console.log("RIGHT ARROW KEY!!");Game.cam[0]+=32;}
+else if (event.keyCode==40){console.log("DOWN ARROW KEY!!");Game.cam[1]-=32;}
+else if (event.keyCode==40){console.log("DOWN ARROW KEY!!");Game.cam[1]-=32;}
+
+else if (event.keyCode==32){/*console.log("SPACE BAR BABY!!")*/;Game.spacebar();}	//hey
+}
+);
+
+
+
+
+Game.block=function(length=Game.currentlength){
+	Game.focus();
+	this.length=length*Game.chunk;
+	//this.color=random(0,256);
+	this.color=choose(["#feffa5","#a5ffac","#f2a5ff"])
+	//this.color="#"+Math.floor(this.color*(Math.random()/2))+""+Math.floor(this.color*(Math.random()/2))+""+Math.floor(this.color*(Math.random()/2))+"";
+	
+	this.fly=1;	//if fly equals 1 i means it's not in the air, obviously
+	this.direction=1;
+	this.x=choose([-(width/2)+this.length/2,(width/2)-this.length/2]);
+	this.lengthA=[this.x-(this.length/2),this.x+(this.length/2)]	//ducktape
+	
+	this.colision=function(what){
+		//something is really wrong in here
+		if(!(this.lengthA[0]>=what.lengthA[1] && this.lengthA[1]<=what.lengthA[0])){
+		
+			this.lengthA=[Math.max(this.lengthA[0],what.lengthA[0]),Math.min(this.lengthA[1],what.lengthA[1])]
+			this.length=this.lengthA[1]-this.lengthA[0];
+			Game.currentlength=Math.ceil(this.length/Game.chunk);
+		}
+		else{
+			Game.lose=1;
+		}
+		//console.log("lmfao")	//lmfao
+		console.log(this.lengthA);
+		console.log(what.lengthA);
+	}
+	
+	this.draw=function(X,Y){
+			//ctx.fillStyle="#000000"
+			ctx.fillStyle=this.color;
+			ctx.fillRect(X-(this.length/2)+this.x, Y+(96/2)+(this.fly*200), this.length, 96);
+			//ctx.fillRect(X+this.x+1, Y+1, this.length-2, 96-2);
+			
+			//uuuh debug yknow, i'm bad at maths so i need this to understand what the fuck is happening inside this mess of a code
+			ctx.fillStyle="#000000"
+			ctx.font = "30px Arial";
+			ctx.fillText((this.x-(this.length/2))+"/"+this.x+"/"+(this.x+(this.length/2))+"",X+this.x, Y+(96)+(this.fly*200));
+		}
+	
+	this.tick=function(){
+		this.lengthA=[this.x-(this.length/2),this.x+(this.length/2)]
+		if(this.fly==0){
+			this.x+=this.direction*Game.chunk*Game.speed;
+			this.x=Math.floor(this.x);
+			if(this.x<=-(width/2)+this.length/2){
+				this.x=-(width/2)+this.length/2;
+				this.direction=1;
+			}
+			else if(this.x>=(width/2)-this.length/2){
+				this.x=(width/2)-this.length/2;
+				this.direction=-1;
+			}
+		}
+	
+	
+		
+	}
+	
+	
+	Game.list.push(this);
+	}
+
+//each time you see a "console.log" it means i struggled
+
+
+Game.spacebar=function(){
+	Game.lose=0;
+	new Game.block(Game.currentlength)
+}
+	
+Game.focus=function(){ //need that focus function in real life
+	Game.cam=[0,Math.max(0,(Game.list.length*96)-400)];
+}
+
+Game.logic=function(){
+
+	Game.Dcam=[(Game.cam[0]+Game.Dcam[0])/2,(Game.cam[1]+Game.Dcam[1])/2]	//cool smooth camera effect for flash kids
+	if(Game.list.length-1>Game.best){Game.best=Game.list.length-1;}
+	
+	if(Game.lose!=1){
+		
+		for(i=0;i<Game.list.length;i++){
+			Game.list[i].fly=1;
+			Game.list[Game.list.length-1].fly=0;
+		
+			Game.list[i].tick()	//tock
+		}
+		if(Game.list.length>2 && Game.list[Game.list.length-1].fly==0){
+			Game.list[(Game.list.length - 2)].colision(Game.list[Game.list.length-3])
+			console.log(Game.list[Game.list.length-2])
+			console.log(Game.list[Game.list.length-3])
+		}
+		
+	}
+	
+	else{
+		Game.init()
+	}
+	
+	Game.speed=0.2+(Game.list.length/300)
+	if(Game.speed>2){
+		Game.speed=2
+	}
+}
+
+	
+Game.draw=function(){
+	ctx.clearRect(0, 0, width, height);
+	
+	ctx.fillStyle="rgb("+165/((Game.list.length+200)/200)+", "+231/((Game.list.length+200)/200)+", "+255/((Game.list.length+400)/400)+")"
+	ctx.fillRect(0, 0, width, height);
+	
+	ctx.fillStyle="#08b40d";
+	ctx.fillRect(-Game.Dcam[0]-2000, Game.Dcam[1]+800, 4000, 4000);
+	
+	for(i=0;i<Game.list.length;i++){
+	
+		Game.list[i].draw((0-Game.Dcam[0])+width/2,((-i*96)+height+Game.Dcam[1])-height/2)
+	}
+	
+	document.getElementById("score").innerHTML="Score: "+(Game.list.length-1)+"<p>Best: "+Game.best;
+	
+	if(Game.lose==1){document.getElementById("score").innerHTML="press space to play"}
+}
+
+Game.loop=function(){
+	Game.logic()
+	Game.draw()
+	setTimeout(Game.loop,1000/Game.fps);
+}
+
+
+Game.loop();	//hell
+
+
+//the little french guy called UsagiK coded this in 2023
+//and tells you not to rehost it and claim it as your own
+//but it's just because it might ruin your reputation
+//i'm telling this for your own good
+
+</script>
+<style>
+#game{
+margin:auto;
+border: 1px solid black;
+}
+</style>
+</html>
